@@ -26,6 +26,18 @@ class Mql5EaStaticTests(unittest.TestCase):
         self.assertIn("MaybeOpenAddOn", source)
         self.assertIn("MaybeCloseBasket", source)
 
+    def test_ea_contains_live_backtest_calibration_controls(self):
+        source = EA_PATH.read_text(encoding="utf-8")
+
+        self.assertIn("PreviousSignal", source)
+        self.assertIn("SignalRisingEdge", source)
+        self.assertIn("TpSpreadCompensationPoints", source)
+        self.assertIn("AddOnSpreadCompensationPoints", source)
+        self.assertNotIn("MaxBasketHoldHours", source)
+        self.assertNotIn("MaxBasketAdversePoints", source)
+        self.assertNotIn("MaxBasketFloatingLossPct", source)
+        self.assertNotIn("EmergencyCloseBasket", source)
+
     def test_ea_contains_required_matched_context_indicators(self):
         source = EA_PATH.read_text(encoding="utf-8")
 

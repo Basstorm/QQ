@@ -3,13 +3,15 @@
 //| Approximate non-risky Quantum Queen strategies for MT5 backtest.  |
 //+------------------------------------------------------------------+
 #property strict
-#property version "0.10"
+#property version "0.11"
 
 #include <Trade/Trade.mqh>
 
 input ulong  MagicBase        = 26061001;
 input double BalancePer001Lot = 400.0;
 input int    SlippagePoints   = 30;
+input double TpSpreadCompensationPoints    = 0.30;
+input double AddOnSpreadCompensationPoints = 0.30;
 input bool   UseS01           = true;
 input bool   UseS03           = true;
 input bool   UseS04           = true;
@@ -19,6 +21,7 @@ input bool   UseS09           = true;
 CTrade trade;
 datetime lastM15Bar = 0;
 datetime lastM1Bar = 0;
+bool PreviousSignal[5];
 
 struct StrategyConfig
 {
@@ -63,10 +66,19 @@ void CheckEntries()
    for(int i = 0; i < ArraySize(Strategies); i++)
    {
       if(!Strategies[i].Enabled) continue;
+      bool currentSignal = EntrySignal(Strategies[i].Name);
+      bool edge = SignalRisingEdge(i, currentSignal);
       if(CountBasketPositions(Strategies[i].MagicOffset) > 0) continue;
-      if(EntrySignal(Strategies[i].Name))
+      if(edge)
          OpenInitial(Strategies[i]);
    }
+}
+
+bool SignalRisingEdge(const int strategyIndex, const bool currentSignal)
+{
+   bool edge = currentSignal && !PreviousSignal[strategyIndex];
+   PreviousSignal[strategyIndex] = currentSignal;
+   return edge;
 }
 
 void ManageOpenBaskets()
@@ -116,7 +128,7 @@ void MaybeOpenAddOn(const StrategyConfig &cfg)
    if(!LastEntry(cfg.MagicOffset, lastPrice, lastTime)) return;
 
    double close = iClose(_Symbol, PERIOD_M1, 1);
-   double adverse = lastPrice - close;
+   double adverse = lastPrice - close - AddOnSpreadCompensationPoints;
    double minutes = (TimeCurrent() - lastTime) / 60.0;
    if(adverse >= threshold && minutes >= minMinutes)
    {
@@ -132,7 +144,7 @@ void MaybeCloseBasket(const StrategyConfig &cfg)
    int layers = CountBasketPositions(cfg.MagicOffset);
    if(layers <= 0) return;
 
-   double tp = ExitTp(cfg.Name, layers);
+   double tp = MathMax(0.01, ExitTp(cfg.Name, layers) - TpSpreadCompensationPoints);
    if(tp <= 0.0) return;
    double vwap = BasketVwap(cfg.MagicOffset);
    double close = iClose(_Symbol, PERIOD_M1, 1);
