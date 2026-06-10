@@ -1163,3 +1163,51 @@ Decision:
 - Proceed with non-S10 backtest development using `threshold`/`move_q25` close-based VWAP TP and adverse-distance add-ons.
 - Keep S10 excluded.
 - Before any production-like evaluation, add missing risk controls/timeout modeling, especially for T6/S12 and possibly T3/S06.
+
+## Phase 6 Lightweight Risk / Timeout Exit Mining
+
+Generated:
+
+- `src/qq_research/risk_timeout_mining.py`
+- `scripts/phase6_risk_timeout_mining.py`
+- `tests/test_risk_timeout_mining.py`
+- `outputs/risk_timeout_basket_frame.csv`
+- `outputs/risk_timeout_candidates.csv`
+- `outputs/risk_timeout_mining.md`
+
+Scope:
+
+- Kept intentionally small per user request.
+- Focused only on observed QQ basket lifecycle for `T3/S06` and `T6/S12` because those were the non-S10 strategies with tail risk in the Phase 5 rule-entry backtest.
+- This is descriptive timeout/risk mining, not an optimized stop-loss search.
+
+Observed QQ risk/timeout candidates:
+
+| Strategy | Baskets | Negative exits | Hold median | Hold q75 | Hold q90 | Hold q95 | Adverse median | Adverse q90 | Exit q10 | Exit median | Max layers |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `T3/S06` | 99 | 1 | 75.0 | 430.5 | 3005.2 | 3131.9 | 1.04 | 4.87 | 0.48 | 0.86 | 188 |
+| `T6/S12` | 166 | 0 | 45.0 | 123.2 | 405.0 | 571.5 | 1.62 | 5.46 | 0.93 | 1.48 | 25 |
+
+Important details:
+
+- `T3/S06` has exactly one observed negative-exit basket in the reconstructed QQ data:
+  - basket `1254`
+  - hold `10330m`
+  - max adverse `38.98`
+  - exit move `-38.66`
+  - max layers `188`
+  - entry `2023-12-20 23:50`, exit `2023-12-28 04:00`
+- `T6/S12` has no observed negative exits in the reconstructed QQ data, but it has long positive-resolution holds:
+  - max hold `3973m`
+  - q95 hold `571.5m`
+  - q90 adverse `5.46`
+  - max adverse `10.60`
+
+Interpretation:
+
+- For `T3/S06`, the primary problem is a rare disaster basket, not normal TP behavior. A hard catastrophic guard around multi-day hold / extreme layer growth is likely needed before trusting broad S06 variants.
+- For `T6/S12`, the real QQ data does not support a simple negative stop-loss conclusion because observed baskets eventually close positive. The Phase 5 simulated T6 tail likely reflects missing QQ timeout/recovery behavior rather than an ordinary fixed stop.
+- Conservative first-pass timeout candidates for future tests:
+  - `T3/S06`: hold cap near q95 ≈ `3132m` (~52h), plus a separate catastrophic max-layer/adverse guard for extreme baskets.
+  - `T6/S12`: hold cap near q95 ≈ `572m` (~9.5h), but this may prematurely exit some genuine QQ recovery baskets and must be tested carefully.
+- No further Phase 6 expansion was done in this pass to avoid overfitting or spending too much time.

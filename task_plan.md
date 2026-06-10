@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** Phase 5 non-S10 basket-engine replay and rule-entry backtest complete
+**Status:** Phase 6 lightweight risk/timeout diagnostics complete
 
 Objectives:
 

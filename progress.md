@@ -327,3 +327,10 @@ Immediate Phase 2 tasks:
 - Implemented end-to-end non-S10 rule-entry basket backtest using M15 inferred rules and M1 basket management.
 - Results support the non-S10 basket-management conclusions: q25/best-threshold close-based VWAP TP matches exits best, add-on grid approximates typical layer depth, and rule-entry baskets are positive for most non-S10 strategies in normalized-point terms.
 - Main unresolved issue: missing stop/timeout/tail-exit logic for T6/S12 and all-background T3/S06, where one unclosed short basket can dominate many TP wins.
+
+### Phase 6 Lightweight Risk/Timeout Diagnostics Completed
+
+- Added a small risk/timeout mining pass focused only on `T3/S06` and `T6/S12`.
+- `T3/S06` tail risk is concentrated in one observed disaster basket: 10330m hold, 188 layers, -38.66 exit move.
+- `T6/S12` has no observed negative QQ exits but does have long recovery holds; q95 hold is about 572m. This suggests the simulated T6 tail is more likely missing recovery/timeout behavior than a simple fixed stop.
+- Kept the pass intentionally small; next step, if needed, is to test conservative timeout caps in the existing non-S10 backtest rather than mining more S10-like complexity.
