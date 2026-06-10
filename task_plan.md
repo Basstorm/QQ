@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** Phase 6 lightweight risk/timeout diagnostics complete
+**Status:** A1 non-risky matched-context MT5 EA draft complete
 
 Objectives:
 

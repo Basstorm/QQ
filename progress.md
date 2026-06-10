@@ -334,3 +334,10 @@ Immediate Phase 2 tasks:
 - `T3/S06` tail risk is concentrated in one observed disaster basket: 10330m hold, 188 layers, -38.66 exit move.
 - `T6/S12` has no observed negative QQ exits but does have long recovery holds; q95 hold is about 572m. This suggests the simulated T6 tail is more likely missing recovery/timeout behavior than a simple fixed stop.
 - Kept the pass intentionally small; next step, if needed, is to test conservative timeout caps in the existing non-S10 backtest rather than mining more S10-like complexity.
+
+### A1 Non-Risky Matched-Context MT5 EA Draft Completed
+
+- Added `mql5/Experts/QuantumQueenApproxNonRisky.mq5`, a first-pass MT5 EA for `T1/S01`, `T2/S03`, `T2/S04`, `T4/S08`, and `T5/S09`.
+- Excluded `T3/S06`, `T5/S10`, and `T6/S12` per current research conclusions.
+- EA uses matched-context entry rules, M1 close-based VWAP TP, adverse-distance add-ons, observed max-layer caps, and compounding lot sizing of 0.01 lot per $400 balance.
+- Added static tests to verify selected strategies, excluded risky strategies, compounding lot expression, basket-management functions, and required indicator functions.

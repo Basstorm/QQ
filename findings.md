@@ -1211,3 +1211,52 @@ Interpretation:
   - `T3/S06`: hold cap near q95 ≈ `3132m` (~52h), plus a separate catastrophic max-layer/adverse guard for extreme baskets.
   - `T6/S12`: hold cap near q95 ≈ `572m` (~9.5h), but this may prematurely exit some genuine QQ recovery baskets and must be tested carefully.
 - No further Phase 6 expansion was done in this pass to avoid overfitting or spending too much time.
+
+## A1 Non-Risky Matched-Context MT5 EA Draft
+
+Generated:
+
+- `mql5/Experts/QuantumQueenApproxNonRisky.mq5`
+- `mql5/README.md`
+- `tests/test_mql5_ea_static.py`
+
+Scope:
+
+- Implements the A1 decision: matched-context entry rules for the current non-risky strategy set.
+- Included strategies:
+  - `T1/S01`
+  - `T2/S03`
+  - `T2/S04`
+  - `T4/S08`
+  - `T5/S09`
+- Excluded strategies:
+  - `T3/S06`
+  - `T5/S10`
+  - `T6/S12`
+
+EA behavior:
+
+- Long-only XAUUSD-oriented research EA.
+- M15 new-bar entry checks.
+- M1 new-bar basket management checks.
+- Entry uses matched-context rules only:
+  - `T1/S01`: `CCI20 >= 130.5291 AND ADX7 -DI <= 8.1907 AND ADX7 +DI >= 33.2559`
+  - `T2/S03`: `WMA50 slope4 >= 1.3709 AND WMA21-WMA50 >= 3.9578 AND SMA21 slope4 >= 1.8114`
+  - `T2/S04`: `ADX21 -DI <= 11.2552 AND ROC34 >= 0.8966 AND SMA21 slope4 >= 2.3986`
+  - `T4/S08`: `ADX21 >= 50.6542 AND Close-EMA50 >= 15.5052`
+  - `T5/S09`: `CMO14 >= 70.0936 AND CMO21 >= 59.3097 AND CHOP14 <= 28.5623`
+- Entry does not use Fisher because the chosen matched-context rules do not require Fisher.
+- Basket management uses:
+  - add-on adverse-distance + minimum minutes from the mined cooldown rules;
+  - close-based basket VWAP TP using mined best `threshold` values;
+  - observed max-layer caps per included strategy.
+- Position sizing:
+  - `floor(AccountBalance / 400) * 0.01` lot;
+  - normalized to broker min/max/step;
+  - each layer currently uses the same base lot to keep this first EA simple.
+
+Important usage notes:
+
+- Use an MT5 hedging account. Netting accounts merge same-symbol positions and will not preserve basket layers.
+- This is a research/backtest approximation, not source-code recovery.
+- The EA does not model S06/S10/S12, hidden QQ state, broker-exact execution, commission/spread assumptions, or advanced recovery/risk logic.
