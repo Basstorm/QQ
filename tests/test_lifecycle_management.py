@@ -75,6 +75,8 @@ class LifecycleManagementTests(unittest.TestCase):
         m1 = pd.DataFrame(
             {
                 "time": pd.date_range("2024-01-01 10:00", periods=5, freq="min"),
+                "high": [100.2, 99.8, 99.2, 100.4, 101.2],
+                "low": [99.8, 99.2, 98.8, 99.7, 100.8],
                 "close": [100.0, 99.5, 99.0, 100.0, 101.0],
             }
         )
@@ -91,6 +93,10 @@ class LifecycleManagementTests(unittest.TestCase):
         self.assertAlmostEqual(add_on_row["pre_last_entry_price"], 100.0)
         self.assertAlmostEqual(add_on_row["minutes_since_pre_last_entry"], 2.0)
         self.assertAlmostEqual(add_on_row["adverse_from_pre_last_entry_points"], 1.0)
+        exit_row = lifecycle[lifecycle["time"].eq(pd.Timestamp("2024-01-01 10:04"))].iloc[0]
+        self.assertAlmostEqual(exit_row["high_move_from_open_vwap_points"], 1.7)
+        self.assertAlmostEqual(exit_row["low_move_from_open_vwap_points"], 1.3)
+        self.assertAlmostEqual(exit_row["touch_move_from_open_vwap_points"], 1.7)
 
 
 if __name__ == "__main__":

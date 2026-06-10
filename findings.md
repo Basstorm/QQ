@@ -840,3 +840,66 @@ Interpretation:
 - T4/T5/S09/T6 use larger TP regimes consistent with the earlier basket-level exit event summary.
 - Naive per-minute threshold precision is low in many early-layer cells because once TP is reached, all subsequent active minutes before the actual close are counted as false positives. This suggests the next step should test first-cross or first-eligible TP logic rather than treating every TP-satisfied minute as an independent exit signal.
 - T5/S10 remains unusual: positive exit move distribution is broad and best F1 chooses high TP with low recall, indicating either mixed exit modes, different basket handling, or more path-dependent logic.
+
+## Phase 5 Exit First-Cross / First-Touch Analysis
+
+Generated:
+
+- `src/qq_research/exit_first_cross.py`
+- `scripts/phase5_exit_first_cross.py`
+- `tests/test_exit_first_cross.py`
+- `outputs/exit_first_cross_events.csv`
+- `outputs/exit_first_cross_summary.csv`
+- `outputs/exit_first_cross_report.md`
+
+Lifecycle update:
+
+- `basket_minute_lifecycle.parquet` now includes M1 high/low and direction-aware intrabar favorable movement:
+  - `m1_high`
+  - `m1_low`
+  - `high_move_from_open_vwap_points`
+  - `low_move_from_open_vwap_points`
+  - `touch_move_from_open_vwap_points`
+- For long baskets, `touch_move_from_open_vwap_points = high - basket_vwap`.
+- For short baskets, `touch_move_from_open_vwap_points = basket_vwap - low`.
+
+Method:
+
+- Compares first M1 TP eligibility to the actual QQ final exit minute.
+- Tested four variants:
+  - `close_q25`: M1 close crosses positive exit q25 TP.
+  - `close_median`: M1 close crosses positive exit median TP.
+  - `touch_q25`: intrabar favorable high/low touches positive exit q25 TP.
+  - `touch_median`: intrabar favorable high/low touches positive exit median TP.
+- Thresholds are per `strategy + open_layer_count` from `outputs/exit_trigger_thresholds.csv`.
+
+Overall results:
+
+| Variant | Cross found % | Weighted within 1m % | Median of layer medians |
+|---|---:|---:|---:|
+| `close_q25` | 83.3 | 62.5 | 1.0m |
+| `close_median` | 55.4 | 69.6 | 1.0m |
+| `touch_q25` | 86.9 | 38.8 | 4.0m |
+| `touch_median` | 70.8 | 60.9 | 1.0m |
+
+`close_q25` strategy-level results, among baskets where a cross was found:
+
+| Strategy | Cross-found baskets | Within 1m % | Median lag | q75 lag | q90 lag |
+|---|---:|---:|---:|---:|---:|
+| `T1/S01` | 404 | 75.99 | 1.0 | 1.0 | 125.5 |
+| `T2/S03` | 284 | 69.37 | 1.0 | 3.0 | 35.4 |
+| `T2/S04` | 344 | 74.71 | 1.0 | 2.0 | 4.7 |
+| `T3/S06` | 70 | 75.71 | 1.0 | 1.0 | 11.3 |
+| `T4/S08` | 31 | 61.29 | 1.0 | 3.0 | 14.0 |
+| `T5/S09` | 41 | 82.93 | 1.0 | 1.0 | 2.0 |
+| `T5/S10` | 70 | 10.00 | 68.5 | 316.25 | 774.2 |
+| `T6/S12` | 137 | 78.83 | 1.0 | 1.0 | 4.4 |
+
+Interpretation:
+
+- `close_q25` is the best first approximation for QQ's exit timing. It finds a TP cross in 83.3% of baskets and many core families exit within 1 minute of first close-cross.
+- `touch_q25` finds slightly more crosses but with much worse timing; intrabar touch often occurs too early. This argues against a simple tick/intrabar touch TP model, at least with M1 high/low approximation.
+- `close_median` is more conservative: when it crosses, timing is often close, but it misses many actual exits.
+- Core families (`T1/S01`, `T2/S03`, `T2/S04`, `T3/S06`, `T5/S09`, `T6/S12`) are broadly consistent with M1 close-based VWAP TP exits.
+- `T5/S10` remains an outlier: first close-cross occurs far before actual exits, supporting the earlier hypothesis that it uses mixed/path-dependent exit logic or a different TP regime.
+- Large q90 lags for some T1/T2 cells show that a subset of baskets touch TP early but are not closed quickly; these may involve spread filters, session filters, minimum profit-money thresholds, partial close behavior, or later-layer special handling.

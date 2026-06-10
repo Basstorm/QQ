@@ -85,7 +85,7 @@ def build_report(add_ons: pd.DataFrame, exits: pd.DataFrame, lifecycle: pd.DataF
 
 def main() -> None:
     positions = pd.read_parquet(POSITIONS)
-    m1 = pd.read_csv(M1_CSV, usecols=["time", "close"])
+    m1 = pd.read_csv(M1_CSV, usecols=["time", "high", "low", "close"])
     add_ons = build_add_on_events(positions)
     exits = build_exit_events(positions)
     lifecycle = build_minute_lifecycle(positions, m1)

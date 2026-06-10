@@ -294,3 +294,10 @@ Immediate Phase 2 tasks:
 - Implemented exit trigger threshold mining with TDD coverage for active basket-minute filtering, threshold evaluation, and strategy/layer TP extraction.
 - Generated `outputs/exit_trigger_thresholds.csv` and `outputs/exit_trigger_thresholds.md`.
 - Result: positive exit minutes strongly support basket VWAP TP thresholds. T1/T2 early layers are around 0.45-0.76 points, T3 around 0.8-1.2, and T4/T5/T6 higher. Naive per-minute precision is low because TP-satisfied minutes before actual close become false positives, so the next step should evaluate first-cross TP logic.
+
+### Phase 5 Exit First-Cross Analysis Completed
+
+- Added M1 high/low and direction-aware touch-move features to the basket lifecycle panel.
+- Implemented first-cross/first-touch exit analysis with tests.
+- Generated `outputs/exit_first_cross_events.csv`, `outputs/exit_first_cross_summary.csv`, and `outputs/exit_first_cross_report.md`.
+- Result: `close_q25` is the best first approximation. It finds TP crosses in 83.3% of baskets and core strategy families usually exit within ~1 minute after first M1 close-cross. Intrabar touch fires too early, and T5/S10 remains a major outlier.

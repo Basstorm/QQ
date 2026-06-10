@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** Phase 5 exit VWAP TP threshold first pass complete
+**Status:** Phase 5 exit first-cross analysis complete
 
 Objectives:
 

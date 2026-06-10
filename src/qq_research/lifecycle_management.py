@@ -79,6 +79,10 @@ def build_exit_events(positions: pd.DataFrame) -> pd.DataFrame:
 def build_minute_lifecycle(positions: pd.DataFrame, m1: pd.DataFrame) -> pd.DataFrame:
     prices = m1.copy()
     prices["time"] = pd.to_datetime(prices["time"]).dt.tz_localize(None)
+    if "high" not in prices:
+        prices["high"] = prices["close"]
+    if "low" not in prices:
+        prices["low"] = prices["close"]
     prices = prices.drop_duplicates("time").set_index("time").sort_index()
     rows = []
     for basket_id, group in positions.sort_values(["basket_id", "entry_time", "position_id"]).groupby("basket_id", sort=True):
@@ -114,6 +118,8 @@ def build_minute_lifecycle(positions: pd.DataFrame, m1: pd.DataFrame) -> pd.Data
         entry_vwap = np.full(len(times), np.nan)
         entry_vwap[valid] = (active_float * entry_values).sum(axis=1)[valid] / total_volume[valid]
         close = timeline["close"].to_numpy(dtype=float)
+        high = timeline["high"].to_numpy(dtype=float)
+        low = timeline["low"].to_numpy(dtype=float)
         pre_active_float = pre_active.astype(float)
         pre_total_volume = (pre_active_float * volumes).sum(axis=1)
         pre_entry_vwap = np.full(len(times), np.nan)
@@ -131,10 +137,16 @@ def build_minute_lifecycle(positions: pd.DataFrame, m1: pd.DataFrame) -> pd.Data
                 minutes_since_pre_last_entry[row_idx] = (pd.Timestamp(time_value) - pd.Timestamp(entry_minutes[last_idx])).total_seconds() / 60
         if direction == "short":
             move_from_vwap = entry_vwap - close
+            high_move_from_vwap = entry_vwap - high
+            low_move_from_vwap = entry_vwap - low
+            touch_move_from_vwap = low_move_from_vwap
             pre_move_from_vwap = pre_entry_vwap - close
             adverse_from_pre_last_entry = close - pre_last_entry_price
         else:
             move_from_vwap = close - entry_vwap
+            high_move_from_vwap = high - entry_vwap
+            low_move_from_vwap = low - entry_vwap
+            touch_move_from_vwap = high_move_from_vwap
             pre_move_from_vwap = close - pre_entry_vwap
             adverse_from_pre_last_entry = pre_last_entry_price - close
         basket_rows = pd.DataFrame(
@@ -144,10 +156,15 @@ def build_minute_lifecycle(positions: pd.DataFrame, m1: pd.DataFrame) -> pd.Data
                 "direction": direction,
                 "time": times,
                 "m1_close": close,
+                "m1_high": high,
+                "m1_low": low,
                 "open_layer_count": active.sum(axis=1).astype(int),
                 "open_total_volume": total_volume,
                 "open_entry_vwap": entry_vwap,
                 "close_move_from_open_vwap_points": move_from_vwap,
+                "high_move_from_open_vwap_points": high_move_from_vwap,
+                "low_move_from_open_vwap_points": low_move_from_vwap,
+                "touch_move_from_open_vwap_points": touch_move_from_vwap,
                 "pre_open_layer_count": pre_active.sum(axis=1).astype(int),
                 "pre_open_total_volume": pre_total_volume,
                 "pre_open_entry_vwap": pre_entry_vwap,
