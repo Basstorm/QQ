@@ -3,7 +3,7 @@
 //| Approximate non-risky Quantum Queen strategies for MT5 backtest.  |
 //+------------------------------------------------------------------+
 #property strict
-#property version "0.12"
+#property version "0.13"
 
 #include <Trade/Trade.mqh>
 
@@ -346,17 +346,17 @@ double CCI(const int period, const int shift)
 
 double ADXMain(const int period, const int shift)
 {
-   return IndicatorBuffer(iADX(_Symbol, PERIOD_M15, period), 0, shift);
+   return IndicatorBuffer(iADXWilder(_Symbol, PERIOD_M15, period), 0, shift);
 }
 
 double DIPlus(const int period, const int shift)
 {
-   return IndicatorBuffer(iADX(_Symbol, PERIOD_M15, period), 1, shift);
+   return IndicatorBuffer(iADXWilder(_Symbol, PERIOD_M15, period), 1, shift);
 }
 
 double DIMinus(const int period, const int shift)
 {
-   return IndicatorBuffer(iADX(_Symbol, PERIOD_M15, period), 2, shift);
+   return IndicatorBuffer(iADXWilder(_Symbol, PERIOD_M15, period), 2, shift);
 }
 
 double MA(const ENUM_MA_METHOD method, const int period, const int shift)

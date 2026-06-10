@@ -46,6 +46,8 @@ class Mql5EaStaticTests(unittest.TestCase):
 
         for function_name in ["CCI", "ADXMain", "DIPlus", "DIMinus", "SMA", "EMA", "WMA", "ROC", "CMO", "CHOP"]:
             self.assertIn(function_name, source)
+        self.assertIn("iADXWilder", source)
+        self.assertNotIn("iADX(_Symbol", source)
         self.assertNotIn("Fisher", source)
 
 
