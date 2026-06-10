@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** Phase 5 final T5/S10 hidden-mode diagnostic complete; pause S10 research
+**Status:** Phase 5 non-S10 basket-engine replay and rule-entry backtest complete
 
 Objectives:
 

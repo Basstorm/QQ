@@ -1091,3 +1091,75 @@ Interpretation and decision:
   - add-on grid from previous layer adverse distance plus optional cooldown,
   - close-based basket VWAP TP, checked on M1/whole-minute cadence.
 - Treat S10 as excluded or approximated separately until more data/log/EA inputs become available.
+
+## Phase 5 Non-S10 Basket-Engine Replay and Rule-Entry Backtest
+
+Generated:
+
+- `src/qq_research/seeded_basket_replay.py`
+- `scripts/phase5_seeded_basket_replay.py`
+- `tests/test_seeded_basket_replay.py`
+- `outputs/seeded_basket_replay.csv`
+- `outputs/seeded_basket_replay_summary.csv`
+- `outputs/seeded_basket_replay.md`
+- `src/qq_research/rule_basket_backtest.py`
+- `scripts/phase5_rule_basket_backtest.py`
+- `tests/test_rule_basket_backtest.py`
+- `outputs/rule_basket_backtest_seeds.csv`
+- `outputs/rule_basket_backtest_trades.csv`
+- `outputs/rule_basket_backtest_summary.csv`
+- `outputs/rule_basket_backtest.md`
+
+Scope:
+
+- `T5/S10` is excluded.
+- Seeded replay uses real QQ initial basket entries as seeds, then replays only inferred add-on and M1-close basket VWAP TP logic.
+- Rule-entry backtest uses inferred M15 entry rules as basket starters, normalized one-unit initial size, inferred add-on thresholds, observed max-layer caps, and close-based VWAP TP using the mined `threshold` column.
+- No spread, commission, slippage, or explicit stop-loss is modeled. Reported PnL is direction-aware points, not account currency.
+
+Seeded basket-engine replay results:
+
+- `move_q25` and mined `threshold` produce the best exit timing overall.
+- Average across non-S10 strategies:
+  - `move_q25`: within 1m `55.84%`, within 5m `68.15%`, within 30m `79.98%`, early exit `82.85%`, late exit `11.18%`, layer exact `60.74%`.
+  - `threshold`: within 1m `54.52%`, within 5m `68.78%`, within 30m `80.43%`, early exit `78.01%`, late exit `14.93%`, layer exact `60.26%`.
+  - `move_median`: within 1m `51.04%`, within 5m `62.80%`, within 30m `78.19%`, early exit `54.34%`, late exit `32.27%`, layer exact `59.35%`.
+- Interpretation:
+  - This supports the close-based basket VWAP TP conclusion.
+  - `q25`/`threshold` best match minute-scale QQ exits, but skew early because the first crossing often occurs before QQ actually closes.
+  - `median` reduces early-exit bias but gives worse near-exit timing.
+  - Add-on replay matches exact final layer count around 55-78% by strategy, median layer difference `0`, so the inferred adverse-distance grid approximates typical basket depth but does not exactly reconstruct every add-on.
+
+Rule-entry basket backtest results with `threshold` exit TP:
+
+| Variant | Strategy | Trades | Unclosed | Win % | Total points | Avg points | Worst trade | Max DD |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| all_background | T1/S01 | 1270 | 0 | 100.0 | 1789.06 | 1.409 | 0.56 | 0.00 |
+| all_background | T2/S03 | 484 | 0 | 100.0 | 542.08 | 1.120 | 0.49 | 0.00 |
+| all_background | T2/S04 | 348 | 0 | 100.0 | 379.54 | 1.091 | 0.43 | 0.00 |
+| all_background | T3/S06 | 452 | 1 | 99.8 | -73.10 | -0.162 | -771.33 | -771.33 |
+| all_background | T4/S08 | 14 | 0 | 100.0 | 56.84 | 4.060 | 1.82 | 0.00 |
+| all_background | T5/S09 | 96 | 0 | 100.0 | 333.58 | 3.475 | 1.87 | 0.00 |
+| all_background | T6/S12 | 381 | 1 | 99.7 | -206.59 | -0.542 | -1034.92 | -1034.92 |
+| matched_context | T1/S01 | 1946 | 0 | 100.0 | 2507.35 | 1.288 | 0.56 | 0.00 |
+| matched_context | T2/S03 | 441 | 0 | 100.0 | 516.64 | 1.172 | 0.49 | 0.00 |
+| matched_context | T2/S04 | 263 | 0 | 100.0 | 320.14 | 1.217 | 0.43 | 0.00 |
+| matched_context | T3/S06 | 518 | 0 | 100.0 | 848.34 | 1.638 | 0.84 | 0.00 |
+| matched_context | T4/S08 | 14 | 0 | 100.0 | 53.65 | 3.832 | 1.82 | 0.00 |
+| matched_context | T5/S09 | 140 | 0 | 100.0 | 434.99 | 3.107 | 1.87 | 0.00 |
+| matched_context | T6/S12 | 419 | 1 | 99.8 | -125.91 | -0.301 | -1034.92 | -1034.92 |
+
+Interpretation:
+
+- The non-S10 basket-management model turns the inferred M15 entry contexts into strongly positive normalized-point baskets for T1/S01, T2/S03, T2/S04, T4/S08, and T5/S09 in this simplified setting.
+- T3/S06 is positive under matched-context entry rules but fragile under all-background rules because one unclosed/timeout short basket dominates many small TP wins.
+- T6/S12 remains fragile in both variants because one unclosed short basket dominates the positive TP baskets. This indicates that the current model is missing a stop/timeout or additional exit rule for T6/S12-style downtrend baskets.
+- T4/S08 and T5/S09 remain low-sample/tentative despite positive backtest output.
+- The all-background variant totals `2821.41` normalized points over `3045` trades; matched-context totals `4555.20` normalized points over `3741` trades. Matched-context is the better non-S10 aggregate in this backtest.
+- Because the model has no spread/slippage/fees and uses approximate M1 closes, this should be read as validation of rule direction and basket-management logic, not a production-grade broker-exact equity curve.
+
+Decision:
+
+- Proceed with non-S10 backtest development using `threshold`/`move_q25` close-based VWAP TP and adverse-distance add-ons.
+- Keep S10 excluded.
+- Before any production-like evaluation, add missing risk controls/timeout modeling, especially for T6/S12 and possibly T3/S06.

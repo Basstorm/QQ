@@ -319,3 +319,11 @@ Immediate Phase 2 tasks:
 - Implemented final S10 hidden target mode diagnostics using realized labels plus entry/early-path feature scoring.
 - Result: `quick_low` can be roughly detected from first 5-30 minute favorable movement, but precision is modest and other modes remain weakly separated. The best separators are full-path/leaky features, not live entry-time selectors.
 - Decision: stop spending time on S10 for now. Proceed to backtesting the other strategies with the stronger inferred basket engine; exclude or separately approximate S10 until more data/log/EA inputs are available.
+
+### Non-S10 Basket Replay and Rule-Entry Backtest Completed
+
+- Stopped S10 research and excluded `T5/S10` from validation.
+- Implemented seeded basket-engine replay using real QQ initial entries to validate inferred add-on and close-based VWAP TP logic.
+- Implemented end-to-end non-S10 rule-entry basket backtest using M15 inferred rules and M1 basket management.
+- Results support the non-S10 basket-management conclusions: q25/best-threshold close-based VWAP TP matches exits best, add-on grid approximates typical layer depth, and rule-entry baskets are positive for most non-S10 strategies in normalized-point terms.
+- Main unresolved issue: missing stop/timeout/tail-exit logic for T6/S12 and all-background T3/S06, where one unclosed short basket can dominate many TP wins.
