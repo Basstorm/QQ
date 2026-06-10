@@ -288,3 +288,9 @@ Immediate Phase 2 tasks:
 - Implemented distance-plus-time add-on rule mining with tests for two-feature rule evaluation and per-strategy/layer candidate selection.
 - Generated `outputs/add_on_cooldown_rules.csv` and `outputs/add_on_cooldown_rules.md`.
 - Result: cooldown/time gates are secondary. 20/37 selected strategy-layer rules need no time gate; positive gates help selected mid-layer cells, usually in the ~3-8 minute range, while adverse distance from the previous layer remains the primary trigger.
+
+### Phase 5 Exit VWAP TP Threshold First Pass Completed
+
+- Implemented exit trigger threshold mining with TDD coverage for active basket-minute filtering, threshold evaluation, and strategy/layer TP extraction.
+- Generated `outputs/exit_trigger_thresholds.csv` and `outputs/exit_trigger_thresholds.md`.
+- Result: positive exit minutes strongly support basket VWAP TP thresholds. T1/T2 early layers are around 0.45-0.76 points, T3 around 0.8-1.2, and T4/T5/T6 higher. Naive per-minute precision is low because TP-satisfied minutes before actual close become false positives, so the next step should evaluate first-cross TP logic.

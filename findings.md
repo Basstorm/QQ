@@ -791,3 +791,52 @@ Interpretation:
 - The cooldown effect is secondary: many best rules choose `min_minutes = 0`, and overall F1 improvement is modest.
 - Operational approximation for add-ons should prioritize strategy-specific grid distance first, then optionally add a small cooldown of ~3-8 minutes for selected families/layers.
 - Longer median observed delays in raw positives likely reflect price not reaching grid distance for a long time, not an explicit minimum wait requirement.
+
+## Phase 5 Exit VWAP TP Threshold Mining
+
+Generated:
+
+- `src/qq_research/exit_trigger_mining.py`
+- `scripts/phase5_exit_trigger_mining.py`
+- `tests/test_exit_trigger_mining.py`
+- `outputs/exit_trigger_thresholds.csv`
+- `outputs/exit_trigger_thresholds.md`
+
+Method:
+
+- Uses active basket-minute rows from `basket_minute_lifecycle.parquet`.
+- Positive labels are final exit minutes.
+- Main rule tested per `strategy + open_layer_count`:
+  - `close_move_from_open_vwap_points >= TP(strategy, open_layer_count)`
+- `close_move_from_open_vwap_points` is direction-aware and measures current M1 close relative to the active basket VWAP.
+- Candidate TP thresholds are positive q10/q25/median/q75 exit moves per strategy/layer count.
+
+Representative early-layer exit move quantiles:
+
+| Strategy | Open layers | Positives | Move q25 | Move median | Best TP |
+|---|---:|---:|---:|---:|---:|
+| `T1/S01` | 1 | 211 | 0.56 | 0.76 | 0.56 |
+| `T1/S01` | 2 | 101 | 0.51 | 0.75 | 0.34 |
+| `T1/S01` | 3 | 40 | 0.51 | 0.73 | 0.51 |
+| `T2/S03` | 1 | 153 | 0.49 | 0.68 | 0.49 |
+| `T2/S03` | 2 | 55 | 0.51 | 0.73 | 0.51 |
+| `T2/S03` | 3 | 34 | 0.53 | 0.72 | 0.53 |
+| `T2/S04` | 1 | 182 | 0.43 | 0.65 | 0.43 |
+| `T2/S04` | 2 | 48 | 0.49 | 0.76 | 0.35 |
+| `T2/S04` | 3 | 41 | 0.47 | 0.60 | 0.32 |
+| `T3/S06` | 1 | 62 | 0.68 | 0.84 | 0.84 |
+| `T3/S06` | 2 | 14 | 0.82 | 1.19 | 0.82 |
+| `T4/S08` | 1 | 21 | 1.37 | 1.78 | 1.78 |
+| `T5/S09` | 1 | 38 | 2.13 | 2.46 | 1.86 |
+| `T5/S10` | 1 | 62 | 0.56 | 1.28 | 2.98 |
+| `T6/S12` | 1 | 61 | 1.17 | 1.39 | 1.17 |
+| `T6/S12` | 2 | 29 | 1.10 | 1.48 | 1.10 |
+
+Interpretation:
+
+- Exit positive quantiles strongly support a basket-VWAP TP mechanism.
+- T1/T2 early-layer exits cluster around ~0.45-0.55 q25 and ~0.60-0.76 median points.
+- T3 exits are higher, around ~0.68-0.82 q25 and ~0.84-1.19 median points.
+- T4/T5/S09/T6 use larger TP regimes consistent with the earlier basket-level exit event summary.
+- Naive per-minute threshold precision is low in many early-layer cells because once TP is reached, all subsequent active minutes before the actual close are counted as false positives. This suggests the next step should test first-cross or first-eligible TP logic rather than treating every TP-satisfied minute as an independent exit signal.
+- T5/S10 remains unusual: positive exit move distribution is broad and best F1 chooses high TP with low recall, indicating either mixed exit modes, different basket handling, or more path-dependent logic.
