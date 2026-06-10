@@ -253,3 +253,10 @@ Immediate Phase 2 tasks:
 - Generated `outputs/temporal_rule_validation.csv`, `outputs/temporal_train_feature_scores.csv`, and `outputs/temporal_rule_validation.md`.
 - Default split is `2021-01-01`, selected after checking yearly positive-count balance.
 - Validation shows `T2/S03` and `T2/S04` have the strongest temporally stable MA/momentum rule signals; sparse strategies still require caution.
+
+### Phase 4 Final Approximate Strategy Synthesis Completed
+
+- Created checkpoint commit `d7d62dc Add Phase 4 temporal rule validation checkpoint.`
+- Implemented final synthesis with TDD coverage for temporal rule selection, confidence classification, row synthesis, and Markdown report generation.
+- Generated `outputs/strategy_rule_synthesis.csv` and `outputs/strategy_rule_synthesis.md`.
+- Final synthesis ranks `T2/S03`, `T2/S04`, and `T5/S10` as robust initial-entry rule families; `T1/S01` and `T3/S06` as moderate; `T5/S09` and `T6/S12` as tentative; `T4/S08` as sparse hint.

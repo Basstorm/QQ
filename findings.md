@@ -543,3 +543,44 @@ Key interpretation:
 - `T1/S01` and `T5/S10` retain modest but stable train/test lift; they remain broader momentum/oscillator-context rules, not precise entries.
 - `T3/S06` and `T6/S12` retain bearish/short-side validation signals, but `T3/S06` still has low absolute precision and small positive counts.
 - `T4/S08` and `T5/S09` show high lift but weak test recall and very small matched-mode test matched counts; treat them as sparse-rule hints, not robust rule recovery.
+
+## Phase 4 Final Approximate Strategy Rule Synthesis
+
+Generated:
+
+- `src/qq_research/strategy_synthesis.py`
+- `scripts/phase4_strategy_synthesis.py`
+- `tests/test_strategy_synthesis.py`
+- `outputs/strategy_rule_synthesis.csv`
+- `outputs/strategy_rule_synthesis.md`
+
+Method:
+
+- Combines compact strategy family profiles with temporal validation results.
+- Temporal validation has the highest weight; full-sample candidate rules without temporal support are not treated as robust.
+- Confidence labels:
+  - `robust`: strong test lift, useful recall, and sufficient test matches.
+  - `moderate`: stable but less precise or less broad.
+  - `tentative`: useful signal but low recall or small matched count.
+  - `sparse_hint`: high lift but too few matches / too little recall.
+
+Final synthesized confidence:
+
+| Strategy | Family | Confidence | Main validated signal |
+|---|---|---|---|
+| `T1/S01` | overbought momentum / trend continuation | moderate | Fisher + rising WMA/EMA slopes; matched CCI/ADX bullish pressure filter |
+| `T2/S03` | overbought momentum / trend continuation | robust | WMA21-WMA50 spread + AO/ROC or MA slopes |
+| `T2/S04` | overbought momentum / trend continuation | robust | ROC20/ROC34 + WMA spread + MA slope, with weak negative DMI |
+| `T3/S06` | oversold/downtrend continuation | moderate | RSI low + bearish EMA/WMA slope; matched negative DMI pressure |
+| `T4/S08` | trend breakout / momentum continuation | sparse_hint | very strong ADX/EMA-distance breakout but only sparse test matches |
+| `T5/S09` | trend breakout / momentum continuation | tentative | Fisher/ADX/CMO high momentum, but weak test recall and sparse matched validation |
+| `T5/S10` | overbought momentum / trend continuation | robust | Fisher + short MA slope/spread, stable especially in matched-context validation |
+| `T6/S12` | downtrend breakout / short momentum continuation | tentative | low DMP + negative CCI/CMO bearish momentum, but low recall/matched count |
+
+Interpretation:
+
+- The strongest recoverable initial-entry families are `T2/S03`, `T2/S04`, and `T5/S10`.
+- `T1/S01` is directionally stable but broader and less precise.
+- `T3/S06` and `T6/S12` appear to be bearish/short-side contexts, but sample size limits precision.
+- `T4/S08` and `T5/S09` remain sparse high-momentum breakout hints; do not treat their thresholds as robust source-rule recovery.
+- This synthesis is still approximate behavioral reverse engineering, not EA source-code recovery.
