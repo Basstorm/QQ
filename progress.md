@@ -76,3 +76,18 @@ Note: current Devin docs do not list a `PreCompaction` hook. Pre-compaction safe
   - Symbol: `XAUUSD`
 
 Ready to begin Phase 0 data audit.
+
+
+### Phase 0 Data Audit Completed
+
+- Created `scripts/phase0_data_audit.py`.
+- Generated `outputs/data_audit_report.md`.
+- Generated `outputs/raw_schema_summary.json`.
+- Confirmed explicit entry strategy labels are available from comments (`T*/S*`).
+- Confirmed only 8 strategy IDs are active in this report.
+- Confirmed report-to-CSV price/time alignment uses offset `0h` after flooring deal timestamps to minute.
+- Noted that GMT+3 may still be the semantic broker timezone for session labeling, but should not be applied when joining to the provided CSV files.
+
+Error encountered:
+
+- Initial script used `np.where` to create strategy labels and failed because pandas evaluated the NaN branch for exit rows. Fixed by assigning strategy only on rows where both `T` and `S` are present.

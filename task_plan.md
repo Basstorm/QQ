@@ -66,7 +66,7 @@ Version/page details observed:
 
 ## Phase 0 — Environment and Data Audit
 
-**Status:** ready to start
+**Status:** complete
 
 Objectives:
 
@@ -88,7 +88,7 @@ Expected outputs:
 
 ## Phase 1 — Trade Reconstruction and Time Alignment
 
-**Status:** pending
+**Status:** ready to start
 
 Objectives:
 

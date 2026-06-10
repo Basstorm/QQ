@@ -179,3 +179,52 @@ Observed workbook structure:
 Important implication:
 
 - The analyzed backtest appears to be for EA version `3.52(2)`, not the currently published page version `3.70`. Version-specific behavior must be considered.
+
+
+## Phase 0 Data Audit Findings
+
+Generated:
+
+- `outputs/data_audit_report.md`
+- `outputs/raw_schema_summary.json`
+- `scripts/phase0_data_audit.py`
+
+Key findings:
+
+- `QuantumQueen_backtest_report.xlsx` has one sheet: `Sheet1`.
+- Main sheet dimensions: 22,707 rows x 15 columns.
+- Report metadata shows:
+  - Expert: `Quantum Queen 3.52(2)`
+  - Symbol: `XAUUSD`
+  - Period field: `M15 (2018.01.01 - 2026.06.09)`
+  - Magic input: `1234`
+  - Set input: `3`
+- Orders section starts at Excel row 83; order header at row 84.
+- Deals section starts at Excel row 11395; deal header at row 11396.
+- Parsed orders: 11,310.
+- Parsed XAUUSD deals: 11,310.
+- Entry deals: 5,655; exit deals: 5,655.
+- Every entry deal has an explicit strategy tag in the comment.
+
+Observed active entry strategy tags:
+
+| Strategy | Entries |
+|---|---:|
+| `T1/S01` | 1,573 |
+| `T2/S03` | 1,063 |
+| `T2/S04` | 1,216 |
+| `T3/S06` | 324 |
+| `T4/S08` | 231 |
+| `T5/S09` | 234 |
+| `T5/S10` | 360 |
+| `T6/S12` | 654 |
+
+Only 8 `S` strategy IDs appear in this report: `S01`, `S03`, `S04`, `S06`, `S08`, `S09`, `S10`, `S12`. The marketed 12 embedded strategies are not all active in this backtest/preset or some generated no entries in the tested period.
+
+Timezone / alignment finding:
+
+- User recalled exported trade-record time is GMT+3.
+- Against the provided M1 CSV, best price/time alignment is report time floored to minute with `offset=0h`, not `-3h`.
+- All-deal match rate at tolerance 0.25: 99.08% for offset 0.
+- Entry-only match rate at tolerance 0.25: 98.27% for offset 0.
+- Interpretation: for joining report trades to provided candles, use `broker_time` directly with no shift. If report time is GMT+3, then the provided CSV data should also be treated as the same broker/server clock despite the `+00:00` suffix. For session labeling, keep a derived `utc_time_est = broker_time - 3h` until broker timezone/DST policy is fully confirmed.

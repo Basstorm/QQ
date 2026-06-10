@@ -1,0 +1,996 @@
+{
+  "workbook": {
+    "sheets": [
+      "Sheet1"
+    ],
+    "max_row": 22707,
+    "max_column": 15
+  },
+  "metadata": {
+    "专家": "Quantum Queen 3.52(2)",
+    "交易品种": "XAUUSD",
+    "期间": "M15 (2018.01.01 - 2026.06.09)",
+    "输入": "InpNoteName=Quantum Queen MT5 v3.52 (17/03/2026)",
+    "公司": "EBC Financial Group (Cayman) Limited",
+    "货币": "盈利（以点为单位）",
+    "初始入金": 10000,
+    "杠杆": "1:100",
+    "质量历史": "98%",
+    "柱": 141398,
+    "总净盈利": 1347268.41,
+    "毛利": 21051329.72,
+    "毛损": -19704061.31,
+    "盈利因子": 1.068375,
+    "采收率": 0.088343,
+    "AHPR": "1.0009 (0.09%)",
+    "GHPR": "1.0009 (0.09%)",
+    "相关性 (盈利, MFE)": 0.013584,
+    "最小持仓时间": "0:00:20",
+    "交易总计": 5655,
+    "总成交": 11310
+  },
+  "inputs": {
+    "InpNoteName": "Quantum Queen MT5 v3.52 (17/03/2026)",
+    "InpNoteOverview": "XAUUSD. Chart timeframe doesn't matter; the EA manages it internally.",
+    "InpNoteWebsite": "https://www.mql5.com/en/market/product/118805",
+    "<unnamed>": "",
+    "InpPause": "1",
+    "InpLotsCalc": "2",
+    "InpAutoLotsValue": "3",
+    "InpLotsFixed": "0.01",
+    "InpLotsFixedBalance": "500.0",
+    "InpDDMode": "0",
+    "InpDDValue": "0.0",
+    "InpMQID": "1",
+    "InpMagicNumber": "1234",
+    "InpSpread": "100",
+    "InpSlippage": "100",
+    "InpXmas": "1",
+    "InpSets": "3",
+    "InpPanel": "1",
+    "InpFont": "Trebuchet MS",
+    "InpFontSize": "8",
+    "InpComment": "Quantum Queen MT5",
+    "InpLineStyle": "0",
+    "InpLineWidth": "2",
+    "InpTPColor": "65280",
+    "InpBEColor": "16777215",
+    "InpGridColor": "65535"
+  },
+  "sections": {
+    "orders_label_excel_row": 83,
+    "orders_header_excel_row": 84,
+    "deals_label_excel_row": 11395,
+    "deals_header_excel_row": 11396
+  },
+  "orders": {
+    "row_count": 11310,
+    "columns": [
+      "open_time",
+      "order",
+      "symbol",
+      "type",
+      "volume_raw",
+      "blank_1",
+      "requested_price",
+      "sl",
+      "tp",
+      "time",
+      "blank_2",
+      "status",
+      "comment"
+    ],
+    "time_min": "2018-01-02 22:00:00",
+    "time_max": "2023-12-28 04:00:00",
+    "status_counts": {
+      "filled": 11310
+    },
+    "comment_non_null": 5765
+  },
+  "deals": {
+    "row_count": 11310,
+    "columns": [
+      "time",
+      "deal",
+      "symbol",
+      "type",
+      "entry",
+      "volume",
+      "price",
+      "order",
+      "commission",
+      "swap",
+      "profit",
+      "balance",
+      "comment",
+      "tag_symbol",
+      "magic",
+      "T",
+      "S",
+      "strategy"
+    ],
+    "time_min": "2018-01-02 22:00:00",
+    "time_max": "2023-12-28 04:00:00",
+    "type_counts": {
+      "buy": 5655,
+      "sell": 5655
+    },
+    "entry_counts": {
+      "in": 5655,
+      "out": 5655
+    },
+    "entry_count": 5655,
+    "exit_count": 5655,
+    "entries_with_strategy": 5655,
+    "entry_strategy_counts": {
+      "T1/S01": 1573,
+      "T2/S03": 1063,
+      "T2/S04": 1216,
+      "T3/S06": 324,
+      "T4/S08": 231,
+      "T5/S09": 234,
+      "T5/S10": 360,
+      "T6/S12": 654
+    },
+    "entry_s_counts": {
+      "1": 1573,
+      "3": 1063,
+      "4": 1216,
+      "6": 324,
+      "8": 231,
+      "9": 234,
+      "10": 360,
+      "12": 654
+    },
+    "entry_t_counts": {
+      "1": 1573,
+      "2": 2279,
+      "3": 324,
+      "4": 231,
+      "5": 594,
+      "6": 654
+    }
+  },
+  "csv": [
+    {
+      "file": "xauusd_m15_2016_2025.csv",
+      "size_bytes": 16926171,
+      "columns": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "sample_rows": [
+        {
+          "time": "2016-01-04 01:00:00+00:00",
+          "open": "1062.32",
+          "high": "1066.18",
+          "low": "1062.32",
+          "close": "1064.17",
+          "tick_volume": "729",
+          "spread": "30",
+          "real_volume": "598358"
+        },
+        {
+          "time": "2016-01-04 01:15:00+00:00",
+          "open": "1064.14",
+          "high": "1064.17",
+          "low": "1062.55",
+          "close": "1063.01",
+          "tick_volume": "873",
+          "spread": "33",
+          "real_volume": "578000"
+        },
+        {
+          "time": "2016-01-04 01:30:00+00:00",
+          "open": "1062.98",
+          "high": "1063.01",
+          "low": "1061.66",
+          "close": "1062.46",
+          "tick_volume": "718",
+          "spread": "34",
+          "real_volume": "584100"
+        },
+        {
+          "time": "2016-01-04 01:45:00+00:00",
+          "open": "1062.45",
+          "high": "1063.05",
+          "low": "1062.23",
+          "close": "1063.05",
+          "tick_volume": "566",
+          "spread": "31",
+          "real_volume": "356000"
+        },
+        {
+          "time": "2016-01-04 02:00:00+00:00",
+          "open": "1063.01",
+          "high": "1063.41",
+          "low": "1062.65",
+          "close": "1063.29",
+          "tick_volume": "946",
+          "spread": "32",
+          "real_volume": "491600"
+        }
+      ],
+      "row_count": 245885,
+      "time_min": "2016-01-04 01:00:00+00:00",
+      "time_max": "2026-06-08 23:45:00+00:00",
+      "duplicate_timestamps": 0,
+      "missing_timestamps": 0
+    },
+    {
+      "file": "xauusd_m1_2016_2026.csv",
+      "size_bytes": 247471474,
+      "columns": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "sample_rows": [
+        {
+          "time": "2016-01-04 01:00:00+00:00",
+          "open": "1062.32",
+          "high": "1066.18",
+          "low": "1062.32",
+          "close": "1066.08",
+          "tick_volume": "49",
+          "spread": "52",
+          "real_volume": "33000"
+        },
+        {
+          "time": "2016-01-04 01:01:00+00:00",
+          "open": "1066.03",
+          "high": "1066.08",
+          "low": "1064.17",
+          "close": "1064.33",
+          "tick_volume": "182",
+          "spread": "45",
+          "real_volume": "144100"
+        },
+        {
+          "time": "2016-01-04 01:02:00+00:00",
+          "open": "1064.46",
+          "high": "1065.11",
+          "low": "1064.46",
+          "close": "1064.86",
+          "tick_volume": "54",
+          "spread": "33",
+          "real_volume": "49100"
+        },
+        {
+          "time": "2016-01-04 01:03:00+00:00",
+          "open": "1064.84",
+          "high": "1065.03",
+          "low": "1064.69",
+          "close": "1065.03",
+          "tick_volume": "20",
+          "spread": "48",
+          "real_volume": "20000"
+        },
+        {
+          "time": "2016-01-04 01:04:00+00:00",
+          "open": "1064.98",
+          "high": "1065.04",
+          "low": "1064.76",
+          "close": "1064.88",
+          "tick_volume": "31",
+          "spread": "48",
+          "real_volume": "31030"
+        }
+      ],
+      "row_count": 3667808,
+      "time_min": "2016-01-04 01:00:00+00:00",
+      "time_max": "2026-06-08 23:57:00+00:00",
+      "duplicate_timestamps": 0,
+      "missing_timestamps": 0
+    }
+  ],
+  "time_alignment": {
+    "all_deal_scores": [
+      {
+        "offset_hours": -6,
+        "tolerance": 0,
+        "available": 10714,
+        "match": 213,
+        "match_rate": 0.0198805301474706,
+        "median_distance": 9.6099999999999,
+        "p90_distance": 28.567000000000014
+      },
+      {
+        "offset_hours": -5,
+        "tolerance": 0,
+        "available": 10683,
+        "match": 236,
+        "match_rate": 0.022091172891509876,
+        "median_distance": 8.079999999999927,
+        "p90_distance": 24.99000000000001
+      },
+      {
+        "offset_hours": -4,
+        "tolerance": 0,
+        "available": 10423,
+        "match": 149,
+        "match_rate": 0.014295308452460903,
+        "median_distance": 6.2999999999999545,
+        "p90_distance": 23.108000000000093
+      },
+      {
+        "offset_hours": -3,
+        "tolerance": 0,
+        "available": 10441,
+        "match": 289,
+        "match_rate": 0.02767934105928551,
+        "median_distance": 4.779999999999973,
+        "p90_distance": 18.179999999999836
+      },
+      {
+        "offset_hours": -2,
+        "tolerance": 0,
+        "available": 10552,
+        "match": 402,
+        "match_rate": 0.03809704321455648,
+        "median_distance": 3.5300000000002,
+        "p90_distance": 12.400000000000091
+      },
+      {
+        "offset_hours": -1,
+        "tolerance": 0,
+        "available": 10562,
+        "match": 507,
+        "match_rate": 0.048002272296913465,
+        "median_distance": 2.259999999999991,
+        "p90_distance": 7.130000000000109
+      },
+      {
+        "offset_hours": 0,
+        "tolerance": 0,
+        "available": 11310,
+        "match": 9378,
+        "match_rate": 0.8291777188328913,
+        "median_distance": 0.0,
+        "p90_distance": 0.07999999999992724
+      },
+      {
+        "offset_hours": 1,
+        "tolerance": 0,
+        "available": 9987,
+        "match": 701,
+        "match_rate": 0.07019124862321018,
+        "median_distance": 1.2000000000000455,
+        "p90_distance": 4.839999999999918
+      },
+      {
+        "offset_hours": 2,
+        "tolerance": 0,
+        "available": 7859,
+        "match": 566,
+        "match_rate": 0.072019340883064,
+        "median_distance": 1.8500000000001364,
+        "p90_distance": 6.539999999999964
+      },
+      {
+        "offset_hours": 3,
+        "tolerance": 0,
+        "available": 9900,
+        "match": 473,
+        "match_rate": 0.04777777777777778,
+        "median_distance": 2.0299999999999727,
+        "p90_distance": 8.279999999999973
+      },
+      {
+        "offset_hours": 4,
+        "tolerance": 0,
+        "available": 9956,
+        "match": 346,
+        "match_rate": 0.034752912816392124,
+        "median_distance": 2.3400000000001455,
+        "p90_distance": 10.559999999999945
+      },
+      {
+        "offset_hours": 5,
+        "tolerance": 0,
+        "available": 8680,
+        "match": 447,
+        "match_rate": 0.05149769585253456,
+        "median_distance": 2.6400000000001,
+        "p90_distance": 10.741000000000012
+      },
+      {
+        "offset_hours": 6,
+        "tolerance": 0,
+        "available": 9679,
+        "match": 403,
+        "match_rate": 0.04163653269965906,
+        "median_distance": 2.9200000000000728,
+        "p90_distance": 11.462000000000042
+      },
+      {
+        "offset_hours": -6,
+        "tolerance": 0.05,
+        "available": 10714,
+        "match": 254,
+        "match_rate": 0.023707298861302968,
+        "median_distance": 9.6099999999999,
+        "p90_distance": 28.567000000000014
+      },
+      {
+        "offset_hours": -5,
+        "tolerance": 0.05,
+        "available": 10683,
+        "match": 260,
+        "match_rate": 0.024337732846578676,
+        "median_distance": 8.079999999999927,
+        "p90_distance": 24.99000000000001
+      },
+      {
+        "offset_hours": -4,
+        "tolerance": 0.05,
+        "available": 10423,
+        "match": 193,
+        "match_rate": 0.01851674182097285,
+        "median_distance": 6.2999999999999545,
+        "p90_distance": 23.108000000000093
+      },
+      {
+        "offset_hours": -3,
+        "tolerance": 0.05,
+        "available": 10441,
+        "match": 331,
+        "match_rate": 0.031701944258212815,
+        "median_distance": 4.779999999999973,
+        "p90_distance": 18.179999999999836
+      },
+      {
+        "offset_hours": -2,
+        "tolerance": 0.05,
+        "available": 10552,
+        "match": 500,
+        "match_rate": 0.047384382107657316,
+        "median_distance": 3.5300000000002,
+        "p90_distance": 12.400000000000091
+      },
+      {
+        "offset_hours": -1,
+        "tolerance": 0.05,
+        "available": 10562,
+        "match": 594,
+        "match_rate": 0.05623934860821814,
+        "median_distance": 2.259999999999991,
+        "p90_distance": 7.130000000000109
+      },
+      {
+        "offset_hours": 0,
+        "tolerance": 0.05,
+        "available": 11310,
+        "match": 9938,
+        "match_rate": 0.8786914235190098,
+        "median_distance": 0.0,
+        "p90_distance": 0.07999999999992724
+      },
+      {
+        "offset_hours": 1,
+        "tolerance": 0.05,
+        "available": 9987,
+        "match": 888,
+        "match_rate": 0.08891559026734755,
+        "median_distance": 1.2000000000000455,
+        "p90_distance": 4.839999999999918
+      },
+      {
+        "offset_hours": 2,
+        "tolerance": 0.05,
+        "available": 7859,
+        "match": 645,
+        "match_rate": 0.08207151037027612,
+        "median_distance": 1.8500000000001364,
+        "p90_distance": 6.539999999999964
+      },
+      {
+        "offset_hours": 3,
+        "tolerance": 0.05,
+        "available": 9900,
+        "match": 569,
+        "match_rate": 0.05747474747474748,
+        "median_distance": 2.0299999999999727,
+        "p90_distance": 8.279999999999973
+      },
+      {
+        "offset_hours": 4,
+        "tolerance": 0.05,
+        "available": 9956,
+        "match": 449,
+        "match_rate": 0.04509843310566493,
+        "median_distance": 2.3400000000001455,
+        "p90_distance": 10.559999999999945
+      },
+      {
+        "offset_hours": 5,
+        "tolerance": 0.05,
+        "available": 8680,
+        "match": 515,
+        "match_rate": 0.05933179723502304,
+        "median_distance": 2.6400000000001,
+        "p90_distance": 10.741000000000012
+      },
+      {
+        "offset_hours": 6,
+        "tolerance": 0.05,
+        "available": 9679,
+        "match": 485,
+        "match_rate": 0.0501084822812274,
+        "median_distance": 2.9200000000000728,
+        "p90_distance": 11.462000000000042
+      },
+      {
+        "offset_hours": -6,
+        "tolerance": 0.1,
+        "available": 10714,
+        "match": 268,
+        "match_rate": 0.02501400037334329,
+        "median_distance": 9.6099999999999,
+        "p90_distance": 28.567000000000014
+      },
+      {
+        "offset_hours": -5,
+        "tolerance": 0.1,
+        "available": 10683,
+        "match": 313,
+        "match_rate": 0.029298886080688945,
+        "median_distance": 8.079999999999927,
+        "p90_distance": 24.99000000000001
+      },
+      {
+        "offset_hours": -4,
+        "tolerance": 0.1,
+        "available": 10423,
+        "match": 229,
+        "match_rate": 0.02197064184975535,
+        "median_distance": 6.2999999999999545,
+        "p90_distance": 23.108000000000093
+      },
+      {
+        "offset_hours": -3,
+        "tolerance": 0.1,
+        "available": 10441,
+        "match": 404,
+        "match_rate": 0.03869361172301504,
+        "median_distance": 4.779999999999973,
+        "p90_distance": 18.179999999999836
+      },
+      {
+        "offset_hours": -2,
+        "tolerance": 0.1,
+        "available": 10552,
+        "match": 542,
+        "match_rate": 0.05136467020470053,
+        "median_distance": 3.5300000000002,
+        "p90_distance": 12.400000000000091
+      },
+      {
+        "offset_hours": -1,
+        "tolerance": 0.1,
+        "available": 10562,
+        "match": 717,
+        "match_rate": 0.06788487028971786,
+        "median_distance": 2.259999999999991,
+        "p90_distance": 7.130000000000109
+      },
+      {
+        "offset_hours": 0,
+        "tolerance": 0.1,
+        "available": 11310,
+        "match": 10389,
+        "match_rate": 0.9185676392572945,
+        "median_distance": 0.0,
+        "p90_distance": 0.07999999999992724
+      },
+      {
+        "offset_hours": 1,
+        "tolerance": 0.1,
+        "available": 9987,
+        "match": 1112,
+        "match_rate": 0.11134474817262441,
+        "median_distance": 1.2000000000000455,
+        "p90_distance": 4.839999999999918
+      },
+      {
+        "offset_hours": 2,
+        "tolerance": 0.1,
+        "available": 7859,
+        "match": 795,
+        "match_rate": 0.10115790813080544,
+        "median_distance": 1.8500000000001364,
+        "p90_distance": 6.539999999999964
+      },
+      {
+        "offset_hours": 3,
+        "tolerance": 0.1,
+        "available": 9900,
+        "match": 657,
+        "match_rate": 0.06636363636363636,
+        "median_distance": 2.0299999999999727,
+        "p90_distance": 8.279999999999973
+      },
+      {
+        "offset_hours": 4,
+        "tolerance": 0.1,
+        "available": 9956,
+        "match": 585,
+        "match_rate": 0.05875853756528726,
+        "median_distance": 2.3400000000001455,
+        "p90_distance": 10.559999999999945
+      },
+      {
+        "offset_hours": 5,
+        "tolerance": 0.1,
+        "available": 8680,
+        "match": 604,
+        "match_rate": 0.0695852534562212,
+        "median_distance": 2.6400000000001,
+        "p90_distance": 10.741000000000012
+      },
+      {
+        "offset_hours": 6,
+        "tolerance": 0.1,
+        "available": 9679,
+        "match": 619,
+        "match_rate": 0.06395288769500981,
+        "median_distance": 2.9200000000000728,
+        "p90_distance": 11.462000000000042
+      },
+      {
+        "offset_hours": -6,
+        "tolerance": 0.25,
+        "available": 10714,
+        "match": 371,
+        "match_rate": 0.03462759006906851,
+        "median_distance": 9.6099999999999,
+        "p90_distance": 28.567000000000014
+      },
+      {
+        "offset_hours": -5,
+        "tolerance": 0.25,
+        "available": 10683,
+        "match": 432,
+        "match_rate": 0.040438079191238416,
+        "median_distance": 8.079999999999927,
+        "p90_distance": 24.99000000000001
+      },
+      {
+        "offset_hours": -4,
+        "tolerance": 0.25,
+        "available": 10423,
+        "match": 377,
+        "match_rate": 0.03617000863475007,
+        "median_distance": 6.2999999999999545,
+        "p90_distance": 23.108000000000093
+      },
+      {
+        "offset_hours": -3,
+        "tolerance": 0.25,
+        "available": 10441,
+        "match": 613,
+        "match_rate": 0.05871085145101044,
+        "median_distance": 4.779999999999973,
+        "p90_distance": 18.179999999999836
+      },
+      {
+        "offset_hours": -2,
+        "tolerance": 0.25,
+        "available": 10552,
+        "match": 747,
+        "match_rate": 0.07079226686884003,
+        "median_distance": 3.5300000000002,
+        "p90_distance": 12.400000000000091
+      },
+      {
+        "offset_hours": -1,
+        "tolerance": 0.25,
+        "available": 10562,
+        "match": 1034,
+        "match_rate": 0.0978981253550464,
+        "median_distance": 2.259999999999991,
+        "p90_distance": 7.130000000000109
+      },
+      {
+        "offset_hours": 0,
+        "tolerance": 0.25,
+        "available": 11310,
+        "match": 11206,
+        "match_rate": 0.9908045977011494,
+        "median_distance": 0.0,
+        "p90_distance": 0.07999999999992724
+      },
+      {
+        "offset_hours": 1,
+        "tolerance": 0.25,
+        "available": 9987,
+        "match": 1836,
+        "match_rate": 0.18383899068789425,
+        "median_distance": 1.2000000000000455,
+        "p90_distance": 4.839999999999918
+      },
+      {
+        "offset_hours": 2,
+        "tolerance": 0.25,
+        "available": 7859,
+        "match": 1065,
+        "match_rate": 0.13551342409975825,
+        "median_distance": 1.8500000000001364,
+        "p90_distance": 6.539999999999964
+      },
+      {
+        "offset_hours": 3,
+        "tolerance": 0.25,
+        "available": 9900,
+        "match": 1076,
+        "match_rate": 0.10868686868686869,
+        "median_distance": 2.0299999999999727,
+        "p90_distance": 8.279999999999973
+      },
+      {
+        "offset_hours": 4,
+        "tolerance": 0.25,
+        "available": 9956,
+        "match": 899,
+        "match_rate": 0.0902973081558859,
+        "median_distance": 2.3400000000001455,
+        "p90_distance": 10.559999999999945
+      },
+      {
+        "offset_hours": 5,
+        "tolerance": 0.25,
+        "available": 8680,
+        "match": 850,
+        "match_rate": 0.097926267281106,
+        "median_distance": 2.6400000000001,
+        "p90_distance": 10.741000000000012
+      },
+      {
+        "offset_hours": 6,
+        "tolerance": 0.25,
+        "available": 9679,
+        "match": 925,
+        "match_rate": 0.09556772393842339,
+        "median_distance": 2.9200000000000728,
+        "p90_distance": 11.462000000000042
+      },
+      {
+        "offset_hours": -6,
+        "tolerance": 0.5,
+        "available": 10714,
+        "match": 514,
+        "match_rate": 0.047974612656337505,
+        "median_distance": 9.6099999999999,
+        "p90_distance": 28.567000000000014
+      },
+      {
+        "offset_hours": -5,
+        "tolerance": 0.5,
+        "available": 10683,
+        "match": 682,
+        "match_rate": 0.06383974538987176,
+        "median_distance": 8.079999999999927,
+        "p90_distance": 24.99000000000001
+      },
+      {
+        "offset_hours": -4,
+        "tolerance": 0.5,
+        "available": 10423,
+        "match": 584,
+        "match_rate": 0.05602993380024945,
+        "median_distance": 6.2999999999999545,
+        "p90_distance": 23.108000000000093
+      },
+      {
+        "offset_hours": -3,
+        "tolerance": 0.5,
+        "available": 10441,
+        "match": 864,
+        "match_rate": 0.08275069437793314,
+        "median_distance": 4.779999999999973,
+        "p90_distance": 18.179999999999836
+      },
+      {
+        "offset_hours": -2,
+        "tolerance": 0.5,
+        "available": 10552,
+        "match": 1087,
+        "match_rate": 0.103013646702047,
+        "median_distance": 3.5300000000002,
+        "p90_distance": 12.400000000000091
+      },
+      {
+        "offset_hours": -1,
+        "tolerance": 0.5,
+        "available": 10562,
+        "match": 1471,
+        "match_rate": 0.13927286498769173,
+        "median_distance": 2.259999999999991,
+        "p90_distance": 7.130000000000109
+      },
+      {
+        "offset_hours": 0,
+        "tolerance": 0.5,
+        "available": 11310,
+        "match": 11303,
+        "match_rate": 0.9993810786914236,
+        "median_distance": 0.0,
+        "p90_distance": 0.07999999999992724
+      },
+      {
+        "offset_hours": 1,
+        "tolerance": 0.5,
+        "available": 9987,
+        "match": 2713,
+        "match_rate": 0.271653149093822,
+        "median_distance": 1.2000000000000455,
+        "p90_distance": 4.839999999999918
+      },
+      {
+        "offset_hours": 2,
+        "tolerance": 0.5,
+        "available": 7859,
+        "match": 1575,
+        "match_rate": 0.20040717648555795,
+        "median_distance": 1.8500000000001364,
+        "p90_distance": 6.539999999999964
+      },
+      {
+        "offset_hours": 3,
+        "tolerance": 0.5,
+        "available": 9900,
+        "match": 1614,
+        "match_rate": 0.16303030303030303,
+        "median_distance": 2.0299999999999727,
+        "p90_distance": 8.279999999999973
+      },
+      {
+        "offset_hours": 4,
+        "tolerance": 0.5,
+        "available": 9956,
+        "match": 1499,
+        "match_rate": 0.15056247488951385,
+        "median_distance": 2.3400000000001455,
+        "p90_distance": 10.559999999999945
+      },
+      {
+        "offset_hours": 5,
+        "tolerance": 0.5,
+        "available": 8680,
+        "match": 1293,
+        "match_rate": 0.148963133640553,
+        "median_distance": 2.6400000000001,
+        "p90_distance": 10.741000000000012
+      },
+      {
+        "offset_hours": 6,
+        "tolerance": 0.5,
+        "available": 9679,
+        "match": 1504,
+        "match_rate": 0.15538795330096083,
+        "median_distance": 2.9200000000000728,
+        "p90_distance": 11.462000000000042
+      }
+    ],
+    "entry_scores_tolerance_0_25": [
+      {
+        "offset_hours": -6,
+        "tolerance": 0.25,
+        "available": 5431,
+        "match": 104,
+        "match_rate": 0.01914932793224084
+      },
+      {
+        "offset_hours": -5,
+        "tolerance": 0.25,
+        "available": 5439,
+        "match": 172,
+        "match_rate": 0.031623460194888764
+      },
+      {
+        "offset_hours": -4,
+        "tolerance": 0.25,
+        "available": 5416,
+        "match": 149,
+        "match_rate": 0.027511078286558344
+      },
+      {
+        "offset_hours": -3,
+        "tolerance": 0.25,
+        "available": 5397,
+        "match": 288,
+        "match_rate": 0.05336297943301834
+      },
+      {
+        "offset_hours": -2,
+        "tolerance": 0.25,
+        "available": 5415,
+        "match": 365,
+        "match_rate": 0.06740535549399815
+      },
+      {
+        "offset_hours": -1,
+        "tolerance": 0.25,
+        "available": 5390,
+        "match": 580,
+        "match_rate": 0.10760667903525047
+      },
+      {
+        "offset_hours": 0,
+        "tolerance": 0.25,
+        "available": 5655,
+        "match": 5557,
+        "match_rate": 0.9826702033598586
+      },
+      {
+        "offset_hours": 1,
+        "tolerance": 0.25,
+        "available": 4851,
+        "match": 874,
+        "match_rate": 0.18016903731189446
+      },
+      {
+        "offset_hours": 2,
+        "tolerance": 0.25,
+        "available": 3456,
+        "match": 451,
+        "match_rate": 0.13049768518518517
+      },
+      {
+        "offset_hours": 3,
+        "tolerance": 0.25,
+        "available": 4729,
+        "match": 560,
+        "match_rate": 0.1184182702474096
+      },
+      {
+        "offset_hours": 4,
+        "tolerance": 0.25,
+        "available": 4899,
+        "match": 525,
+        "match_rate": 0.10716472749540723
+      },
+      {
+        "offset_hours": 5,
+        "tolerance": 0.25,
+        "available": 4055,
+        "match": 472,
+        "match_rate": 0.11639950678175093
+      },
+      {
+        "offset_hours": 6,
+        "tolerance": 0.25,
+        "available": 4625,
+        "match": 454,
+        "match_rate": 0.09816216216216216
+      }
+    ],
+    "best_tolerance_0_25": {
+      "offset_hours": 0,
+      "tolerance": 0.25,
+      "available": 11310,
+      "match": 11206,
+      "match_rate": 0.9908045977011494,
+      "median_distance": 0.0,
+      "p90_distance": 0.07999999999992724
+    },
+    "best_entry_tolerance_0_25": {
+      "offset_hours": 0,
+      "tolerance": 0.25,
+      "available": 5655,
+      "match": 5557,
+      "match_rate": 0.9826702033598586
+    }
+  }
+}

@@ -9,7 +9,9 @@ QuantumQueen_backtest_report.xlsx
 xauusd_*.csv
 
 # Generated analysis outputs
-outputs/
+outputs/*
+!outputs/*.md
+!outputs/*.json
 *.parquet
 *.feather
 *.pkl
