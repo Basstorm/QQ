@@ -282,3 +282,9 @@ Immediate Phase 2 tasks:
 - Implemented add-on trigger threshold mining with TDD coverage for trigger frame filtering, threshold evaluation, and strategy/layer threshold extraction.
 - Generated `outputs/add_on_trigger_thresholds.csv` and `outputs/add_on_trigger_thresholds.md`.
 - Key result: delayed add-ons are well explained by adverse move from previous layer, with strategy-specific thresholds around 1.6, 2.1, 3.1, or 5.4 XAUUSD points depending on strategy family.
+
+### Phase 5 Add-on Cooldown Analysis Completed
+
+- Implemented distance-plus-time add-on rule mining with tests for two-feature rule evaluation and per-strategy/layer candidate selection.
+- Generated `outputs/add_on_cooldown_rules.csv` and `outputs/add_on_cooldown_rules.md`.
+- Result: cooldown/time gates are secondary. 20/37 selected strategy-layer rules need no time gate; positive gates help selected mid-layer cells, usually in the ~3-8 minute range, while adverse distance from the previous layer remains the primary trigger.

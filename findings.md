@@ -742,3 +742,52 @@ Interpretation:
   - T6/S12: ~2.0-2.2 points.
 - Precision varies because threshold-only rules still match many candidate minutes, especially early layers with long basket exposure, but lift is strong for most strategy/layer cells.
 - Next step should add a time gate and/or layer-specific cooldown to improve precision, then test a simple add-on simulator using these thresholds.
+
+## Phase 5 Add-on Cooldown / Time-Gate Mining
+
+Generated:
+
+- `scripts/phase5_add_on_cooldown_mining.py`
+- `outputs/add_on_cooldown_rules.csv`
+- `outputs/add_on_cooldown_rules.md`
+
+Method:
+
+- Extends add-on trigger mining from a one-feature rule to a two-feature rule:
+  - `adverse_from_pre_last_entry_points >= adverse_threshold`
+  - `minutes_since_pre_last_entry >= min_minutes`
+- Candidate rules were mined per `strategy + pre_open_layer_count`.
+- Candidate selection sorted by F1, then precision, then recall.
+- Baseline comparison is the distance-only rule using the positive q25 adverse threshold and no time gate.
+
+Results:
+
+- 37 strategy/layer cells met the minimum positive sample requirement.
+- 20 of 37 selected rules had `min_minutes = 0`, meaning no meaningful cooldown was needed by the F1 criterion.
+- 17 of 37 selected rules preferred a positive time gate.
+- F1 improvement from adding the time gate was modest overall:
+  - mean improvement: ~0.045
+  - median improvement: ~0.021
+  - 75th percentile improvement: ~0.056
+  - maximum improvement: ~0.291
+
+Important examples:
+
+| Strategy | Prior layers | Adverse threshold | Min minutes | F1 | Baseline F1 |
+|---|---:|---:|---:|---:|---:|
+| `T2/S03` | 3 | 1.64 | 5.0 | 0.436 | 0.376 |
+| `T2/S03` | 4 | 1.57 | 5.2 | 0.364 | 0.165 |
+| `T2/S04` | 3 | 1.91 | 3.8 | 0.583 | 0.518 |
+| `T2/S04` | 5 | 1.77 | 5.0 | 0.556 | 0.389 |
+| `T3/S06` | 1 | 3.18 | 4.8 | 0.606 | 0.577 |
+| `T4/S08` | 1 | 1.64 | 3.0 | 0.540 | 0.507 |
+| `T4/S08` | 2 | 1.69 | 7.0 | 0.585 | 0.533 |
+| `T6/S12` | 3 | 1.95 | 15.0 | 0.535 | 0.514 |
+
+Interpretation:
+
+- The core add-on trigger remains adverse distance from the previous layer.
+- A small positive cooldown/time gate improves some mid-layer cells, especially T2/S03 layers 3-4, T2/S04 layers 3-6, and T4/S08 early layers.
+- The cooldown effect is secondary: many best rules choose `min_minutes = 0`, and overall F1 improvement is modest.
+- Operational approximation for add-ons should prioritize strategy-specific grid distance first, then optionally add a small cooldown of ~3-8 minutes for selected families/layers.
+- Longer median observed delays in raw positives likely reflect price not reaching grid distance for a long time, not an explicit minimum wait requirement.
