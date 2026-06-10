@@ -1,0 +1,13 @@
+feature,eta_squared,non_null,mode_medians
+path_mae,0.5804317154808948,108,late_high=-3.585; mixed_other=-6.161; overnight_medium=-1.935; quick_low=-0.265; timeout_loss=-2.525
+path_mfe,0.45813864785042163,108,late_high=4.286; mixed_other=2.258; overnight_medium=2.065; quick_low=1.945; timeout_loss=0.060
+entry_hour,0.4299539065058852,108,late_high=8.500; mixed_other=22.000; overnight_medium=22.000; quick_low=22.000; timeout_loss=22.000
+mfe_30m,0.33894265109531735,108,late_high=0.630; mixed_other=0.220; overnight_medium=0.325; quick_low=1.570; timeout_loss=0.060
+early_adverse_max,0.2566225985684924,108,late_high=1.185; mixed_other=0.450; overnight_medium=1.010; quick_low=0.260; timeout_loss=1.760
+mae_30m,0.23825180424596612,108,late_high=-1.185; mixed_other=-0.465; overnight_medium=-1.010; quick_low=-0.260; timeout_loss=-1.760
+mfe_5m,0.22534132090484593,108,late_high=0.065; mixed_other=-0.115; overnight_medium=-0.150; quick_low=0.770; timeout_loss=0.015
+observed_minutes,0.21861048667468813,108,late_high=658.500; mixed_other=1174.000; overnight_medium=289.500; quick_low=19.000; timeout_loss=53.500
+mae_5m,0.12509011055742691,108,late_high=-0.350; mixed_other=-0.395; overnight_medium=-0.500; quick_low=-0.100; timeout_loss=-0.770
+max_layers_30m,0.008958980304058723,108,late_high=1.000; mixed_other=1.000; overnight_medium=1.000; quick_low=1.000; timeout_loss=1.000
+entry_minute,0.007312943731346155,108,late_high=18.500; mixed_other=22.500; overnight_medium=20.000; quick_low=20.000; timeout_loss=0.000
+add_ons_30m,0.0030874519895934915,108,late_high=0.000; mixed_other=0.000; overnight_medium=0.000; quick_low=0.000; timeout_loss=0.000

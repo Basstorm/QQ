@@ -1027,3 +1027,67 @@ Interpretation:
 - The oracle final-mode diagnostic materially improves lag tails, especially for median/q75/q90 thresholds, without changing the TP values. This means the key missing state is likely not the current clock alone; it is which S10 target mode the basket belongs to.
 - S10 likely has an entry-time hidden submode or target selector. Current time/holding tells us where the basket is now, but not whether it is intended to be a quick low-TP basket, an overnight medium-TP basket, or a late high-TP recovery basket.
 - Next best research direction: classify S10 baskets by entry context and early path features to infer this hidden target mode before exit.
+
+## Phase 5 Final T5/S10 Hidden Target Mode Diagnostic
+
+Generated:
+
+- `src/qq_research/s10_hidden_mode_diagnostics.py`
+- `scripts/phase5_s10_hidden_mode_diagnostics.py`
+- `tests/test_s10_hidden_mode_diagnostics.py`
+- `outputs/s10_hidden_mode_features.csv`
+- `outputs/s10_hidden_mode_feature_scores.csv`
+- `outputs/s10_hidden_mode_feature_rules.csv`
+- `outputs/s10_hidden_mode_diagnostics.md`
+
+Purpose:
+
+- This was the final S10-specific research pass before deciding whether to pause S10 and move to backtesting the other strategies.
+- The test was whether S10 hidden target modes can be separated from entry-time and early-path features.
+
+Realized target-mode labels:
+
+| Target mode | Baskets |
+|---|---:|
+| `quick_low` | 34 |
+| `overnight_medium` | 34 |
+| `late_high` | 18 |
+| `timeout_loss` | 14 |
+| `mixed_other` | 8 |
+
+Feature separation findings:
+
+- Full-path features separate modes best, but are not live-tradeable:
+  - `path_mae` eta² `0.580`
+  - `path_mfe` eta² `0.458`
+  - `observed_minutes` eta² `0.219`
+- Entry hour separates late/high/non-22 starts from the dominant 22:xx starts, but does not separate the main 22:xx modes:
+  - `entry_hour` eta² `0.430`
+  - medians: `quick_low=22`, `overnight_medium=22`, `timeout_loss=22`, `mixed_other=22`, `late_high=8.5`
+- Best practical early-path features:
+  - `mfe_30m` eta² `0.339`
+  - `early_adverse_max` eta² `0.257`
+  - `mae_30m` eta² `0.238`
+  - `mfe_5m` eta² `0.225`
+
+Best one-feature early rules:
+
+| Target mode | Rule | Precision | Recall | F1 |
+|---|---|---:|---:|---:|
+| `quick_low` | `mfe_30m >= 0.680` | 0.556 | 0.882 | 0.682 |
+| `quick_low` | `mfe_5m >= 0.150` | 0.519 | 0.824 | 0.636 |
+| `quick_low` | `mfe_30m >= 1.435` | 0.704 | 0.559 | 0.623 |
+| `overnight_medium` | `mfe_5m <= 0.683` | 0.395 | 0.941 | 0.557 |
+| `overnight_medium` | `mfe_30m <= 1.435` | 0.383 | 0.912 | 0.539 |
+
+Interpretation and decision:
+
+- There is a real early-path signal for `quick_low`: if S10 gets favorable movement in the first 5-30 minutes, it is often a quick low-target exit.
+- However, precision is modest even for the best quick-low rule, and the other modes are not cleanly separable from entry/early-path single features.
+- The strongest separators are full-path/leaky features, which confirm target modes exist but do not provide a usable entry-time rule.
+- S10 likely depends on EA-internal hidden state, unobserved inputs, or a more complex multi-feature classifier that is not worth further reverse-engineering now given the small 108-basket sample.
+- Decision: pause S10-specific reverse engineering. For the next phase, backtest the other strategies using the stronger inferred basket engine:
+  - robust entry filters as basket starters,
+  - add-on grid from previous layer adverse distance plus optional cooldown,
+  - close-based basket VWAP TP, checked on M1/whole-minute cadence.
+- Treat S10 as excluded or approximated separately until more data/log/EA inputs become available.

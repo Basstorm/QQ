@@ -313,3 +313,9 @@ Immediate Phase 2 tasks:
 - Implemented S10 current-session/current-holding mode TP mining with first-cross validation.
 - Generated `outputs/s10_mode_tp_thresholds.csv`, `outputs/s10_mode_tp_first_cross_events.csv`, `outputs/s10_mode_tp_first_cross_summary.csv`, and `outputs/s10_mode_tp_report.md`.
 - Result: current mode TP alone is not sufficient. Low/mid quantile thresholds still trigger too early; high quantiles are timely but low coverage. Oracle final-mode improves lag materially, indicating S10 likely has an entry-time hidden target mode rather than a pure current-clock rule.
+
+### Final S10 Hidden-Mode Diagnostic Completed; S10 Research Paused
+
+- Implemented final S10 hidden target mode diagnostics using realized labels plus entry/early-path feature scoring.
+- Result: `quick_low` can be roughly detected from first 5-30 minute favorable movement, but precision is modest and other modes remain weakly separated. The best separators are full-path/leaky features, not live entry-time selectors.
+- Decision: stop spending time on S10 for now. Proceed to backtesting the other strategies with the stronger inferred basket engine; exclude or separately approximate S10 until more data/log/EA inputs are available.

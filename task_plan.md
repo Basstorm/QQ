@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** Phase 5 T5/S10 mode-conditioned TP first pass complete
+**Status:** Phase 5 final T5/S10 hidden-mode diagnostic complete; pause S10 research
 
 Objectives:
 
