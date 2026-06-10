@@ -969,3 +969,61 @@ Interpretation:
   - overnight / late-session exits with higher effective targets,
   - some loss or low-profit timeout exits.
 - S10 should be modeled separately from the common T1/T2/T3/T4/T5-S09/T6 close_q25 basket VWAP TP rule.
+
+## Phase 5 T5/S10 Mode-Conditioned TP First Pass
+
+Generated:
+
+- `src/qq_research/s10_mode_tp_mining.py`
+- `scripts/phase5_s10_mode_tp_mining.py`
+- `tests/test_s10_mode_tp_mining.py`
+- `outputs/s10_mode_tp_thresholds.csv`
+- `outputs/s10_mode_tp_first_cross_events.csv`
+- `outputs/s10_mode_tp_first_cross_summary.csv`
+- `outputs/s10_mode_tp_report.md`
+
+Method:
+
+- S10 active basket-minute rows are labeled by current broker session and current holding bucket:
+  - sessions: `00`, `01-04`, `05-08`, `09-12`, `13-16`, `17-20`, `21-23`
+  - holding buckets: `<=30m`, `30-120m`, `120-360m`, `360-1440m`, `>1440m`
+  - mode form: `session|holding_bucket`
+- TP thresholds are mined from final exit positive rows per current mode:
+  - `tp_q25`, `tp_median`, `tp_q75`, `tp_q90`
+- First-cross timing is evaluated using current mode thresholds at every M1 row.
+- An oracle diagnostic was also added: only enable the TP for the basket's final exit mode. This is not tradeable, but tests whether the missing ingredient is knowing the basket's eventual target mode.
+
+Representative mined S10 mode TP thresholds:
+
+| S10 mode | Positives | TP q25 | TP median | TP q75 | TP q90 |
+|---|---:|---:|---:|---:|---:|
+| `21-23|<=30m` | 30 | 0.87 | 1.55 | 2.57 | 3.08 |
+| `21-23|30-120m` | 12 | 0.07 | 0.85 | 1.17 | 1.63 |
+| `01-04|120-360m` | 23 | 0.28 | 1.28 | 3.05 | 4.62 |
+| `01-04|>1440m` | 11 | 0.52 | 2.00 | 2.27 | 2.42 |
+| `13-16|360-1440m` | 5 | 3.16 | 4.31 | 4.98 | 5.00 |
+
+First-cross timing summary:
+
+| Variant | Cross found % | Within 1m % | Within 5m % | Median lag | q75 lag | q90 lag |
+|---|---:|---:|---:|---:|---:|---:|
+| `tp_q25` | 82.4 | 19.1 | 31.5 | 30.0 | 197.0 | 1512.6 |
+| `tp_median` | 59.3 | 29.7 | 45.3 | 10.5 | 158.2 | 438.5 |
+| `tp_q75` | 38.0 | 39.0 | 41.5 | 8.0 | 142.0 | 591.0 |
+| `tp_q90` | 22.2 | 50.0 | 62.5 | 1.5 | 48.2 | 417.5 |
+
+Oracle final-mode diagnostic:
+
+| Variant | Cross found % | Within 1m % | Within 5m % | Median lag | q75 lag | q90 lag |
+|---|---:|---:|---:|---:|---:|---:|
+| `oracle_final_mode_tp_q25` | 77.8 | 26.2 | 41.7 | 8.0 | 25.0 | 69.1 |
+| `oracle_final_mode_tp_median` | 55.6 | 41.7 | 63.3 | 2.0 | 11.5 | 32.9 |
+| `oracle_final_mode_tp_q75` | 32.4 | 51.4 | 54.3 | 1.0 | 11.0 | 22.0 |
+| `oracle_final_mode_tp_q90` | 21.3 | 60.9 | 78.3 | 1.0 | 4.5 | 20.6 |
+
+Interpretation:
+
+- Simple current-session/current-holding mode TP does not solve S10. Low/mid quantile thresholds still trigger too early, and high quantiles become timely only by sacrificing most coverage.
+- The oracle final-mode diagnostic materially improves lag tails, especially for median/q75/q90 thresholds, without changing the TP values. This means the key missing state is likely not the current clock alone; it is which S10 target mode the basket belongs to.
+- S10 likely has an entry-time hidden submode or target selector. Current time/holding tells us where the basket is now, but not whether it is intended to be a quick low-TP basket, an overnight medium-TP basket, or a late high-TP recovery basket.
+- Next best research direction: classify S10 baskets by entry context and early path features to infer this hidden target mode before exit.

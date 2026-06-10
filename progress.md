@@ -307,3 +307,9 @@ Immediate Phase 2 tasks:
 - Implemented S10-specific path diagnostics and generated `outputs/s10_exit_path_diagnostics.md/.csv` and `outputs/s10_exit_path_summary.csv`.
 - User confirmed QQ live exits are checked about once per minute and close on minute boundaries, supporting close-based rather than intrabar-touch exit inference.
 - Result: S10 actual exits are usually near the basket's max close move, with median max-to-exit lag 1 minute and median retrace only 0.11 points. S10 is therefore not mainly a trailing/retrace exit. It appears mode/time/session-conditioned: 94/108 starts are at broker hour 22, quick 21-23 exits have lower median target, while later/overnight exits require higher effective targets.
+
+### Phase 5 T5/S10 Mode-Conditioned TP First Pass Completed
+
+- Implemented S10 current-session/current-holding mode TP mining with first-cross validation.
+- Generated `outputs/s10_mode_tp_thresholds.csv`, `outputs/s10_mode_tp_first_cross_events.csv`, `outputs/s10_mode_tp_first_cross_summary.csv`, and `outputs/s10_mode_tp_report.md`.
+- Result: current mode TP alone is not sufficient. Low/mid quantile thresholds still trigger too early; high quantiles are timely but low coverage. Oracle final-mode improves lag materially, indicating S10 likely has an entry-time hidden target mode rather than a pure current-clock rule.
