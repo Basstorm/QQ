@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** final approximate strategy synthesis complete
+**Status:** robust strategy vectorbt smoke backtest complete
 
 Objectives:
 

@@ -260,3 +260,10 @@ Immediate Phase 2 tasks:
 - Implemented final synthesis with TDD coverage for temporal rule selection, confidence classification, row synthesis, and Markdown report generation.
 - Generated `outputs/strategy_rule_synthesis.csv` and `outputs/strategy_rule_synthesis.md`.
 - Final synthesis ranks `T2/S03`, `T2/S04`, and `T5/S10` as robust initial-entry rule families; `T1/S01` and `T3/S06` as moderate; `T5/S09` and `T6/S12` as tentative; `T4/S08` as sparse hint.
+
+### Phase 4 Robust Rule Vectorbt Smoke Backtest Completed
+
+- Added `vectorbt` dependency using `uv add vectorbt`.
+- Implemented robust-rule vectorbt smoke backtest with TDD coverage for rule-mask evaluation, edge-signal generation, and robust-variant selection.
+- Generated `outputs/robust_vectorbt_backtest.csv` and `outputs/robust_vectorbt_backtest.md`.
+- Result: standalone long-only rule-on/rule-off backtests are weak; only `T2/S03` is modestly positive, supporting the conclusion that robust entry contexts are not sufficient without Quantum Queen's basket/exit management.

@@ -584,3 +584,42 @@ Interpretation:
 - `T3/S06` and `T6/S12` appear to be bearish/short-side contexts, but sample size limits precision.
 - `T4/S08` and `T5/S09` remain sparse high-momentum breakout hints; do not treat their thresholds as robust source-rule recovery.
 - This synthesis is still approximate behavioral reverse engineering, not EA source-code recovery.
+
+## Phase 4 Robust Rule Vectorbt Smoke Backtest
+
+Generated:
+
+- `src/qq_research/robust_vectorbt_backtest.py`
+- `scripts/phase4_robust_vectorbt_backtest.py`
+- `tests/test_robust_vectorbt_backtest.py`
+- `outputs/robust_vectorbt_backtest.csv`
+- `outputs/robust_vectorbt_backtest.md`
+
+Method:
+
+- Added `vectorbt` dependency.
+- Backtested the three `robust` synthesized strategy families: `T2/S03`, `T2/S04`, and `T5/S10`.
+- Uses M15 close data only.
+- Long-only, one-unit position sizing, no fees/slippage.
+- Entry occurs when a robust rule mask changes from false to true.
+- Exit occurs when the same rule mask changes from true to false.
+- This intentionally excludes Quantum Queen grid/add-on management, inferred TP/SL, and basket-level exit logic.
+
+Results:
+
+| Strategy | Variant | Return % | Max DD % | Sharpe | Trades | Win rate % |
+|---|---|---:|---:|---:|---:|---:|
+| `T2/S03` | `all_background` | 1.65 | -1.47 | 0.46 | 494 | 36.44 |
+| `T2/S03` | `matched_context` | 1.14 | -1.97 | 0.31 | 445 | 41.80 |
+| `T2/S04` | `all_background` | -0.75 | -1.86 | -0.26 | 353 | 36.83 |
+| `T2/S04` | `matched_context` | 0.01 | -1.00 | 0.01 | 269 | 37.17 |
+| `T5/S10` | `all_background` | 0.12 | -1.66 | 0.05 | 841 | 38.76 |
+| `T5/S10` | `matched_context` | -1.68 | -2.33 | -0.49 | 1459 | 37.77 |
+
+Interpretation:
+
+- The robust entry contexts do not become strong standalone long-only strategies when exited simply on rule deactivation.
+- `T2/S03` is the only clearly positive simple-rule variant in this smoke test, but the edge is small.
+- `T2/S04` was robust as an entry classifier, but its naive rule-on/rule-off trade management is near flat to negative.
+- `T5/S10` matched-context rule is a strong entry-bar classifier but overtrades and loses under naive exits.
+- This supports the hypothesis that Quantum Queen's performance depends heavily on basket/grid/TP management and/or additional exit filters; initial-entry filters alone are not enough to reproduce EA returns.
