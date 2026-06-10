@@ -119,12 +119,24 @@ def build_minute_lifecycle(positions: pd.DataFrame, m1: pd.DataFrame) -> pd.Data
         pre_entry_vwap = np.full(len(times), np.nan)
         pre_valid = pre_total_volume > 0
         pre_entry_vwap[pre_valid] = (pre_active_float * entry_values).sum(axis=1)[pre_valid] / pre_total_volume[pre_valid]
+        entry_minutes = group["entry_time"].dt.floor("min").to_numpy(dtype="datetime64[ns]")
+        time_values = times.to_numpy(dtype="datetime64[ns]")
+        pre_last_entry_price = np.full(len(times), np.nan)
+        minutes_since_pre_last_entry = np.full(len(times), np.nan)
+        for row_idx, time_value in enumerate(time_values):
+            prior = np.where(entry_minutes < time_value)[0]
+            if len(prior):
+                last_idx = prior[-1]
+                pre_last_entry_price[row_idx] = float(group["entry_price"].iloc[last_idx])
+                minutes_since_pre_last_entry[row_idx] = (pd.Timestamp(time_value) - pd.Timestamp(entry_minutes[last_idx])).total_seconds() / 60
         if direction == "short":
             move_from_vwap = entry_vwap - close
             pre_move_from_vwap = pre_entry_vwap - close
+            adverse_from_pre_last_entry = close - pre_last_entry_price
         else:
             move_from_vwap = close - entry_vwap
             pre_move_from_vwap = close - pre_entry_vwap
+            adverse_from_pre_last_entry = pre_last_entry_price - close
         basket_rows = pd.DataFrame(
             {
                 "basket_id": basket_id,
@@ -140,6 +152,9 @@ def build_minute_lifecycle(positions: pd.DataFrame, m1: pd.DataFrame) -> pd.Data
                 "pre_open_total_volume": pre_total_volume,
                 "pre_open_entry_vwap": pre_entry_vwap,
                 "close_move_from_pre_open_vwap_points": pre_move_from_vwap,
+                "pre_last_entry_price": pre_last_entry_price,
+                "minutes_since_pre_last_entry": minutes_since_pre_last_entry,
+                "adverse_from_pre_last_entry_points": adverse_from_pre_last_entry,
                 "minutes_since_initial_entry": (times - initial_time).dt.total_seconds() / 60,
                 "is_add_on_minute": times.isin(add_on_minutes),
                 "is_final_exit_minute": times.eq(final_exit_minute),

@@ -88,6 +88,9 @@ class LifecycleManagementTests(unittest.TestCase):
         add_on_row = lifecycle[lifecycle["time"].eq(pd.Timestamp("2024-01-01 10:02"))].iloc[0]
         self.assertEqual(add_on_row["pre_open_layer_count"], 1)
         self.assertAlmostEqual(add_on_row["close_move_from_pre_open_vwap_points"], -1.0)
+        self.assertAlmostEqual(add_on_row["pre_last_entry_price"], 100.0)
+        self.assertAlmostEqual(add_on_row["minutes_since_pre_last_entry"], 2.0)
+        self.assertAlmostEqual(add_on_row["adverse_from_pre_last_entry_points"], 1.0)
 
 
 if __name__ == "__main__":

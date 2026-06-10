@@ -275,3 +275,10 @@ Immediate Phase 2 tasks:
 - Generated add-on events, exit events, and active basket-minute lifecycle parquet outputs plus `outputs/lifecycle_management_report.md`.
 - Key finding: delayed/grid add-on spacing is strategy-specific and tight for T1/T2 (~1.6 points), wider for T3/T5/T6; exit moves from entry VWAP are small and strategy-specific.
 - The lifecycle panel includes `pre_open_*` features for true per-minute add-on trigger inference.
+
+### Phase 5 Add-on Trigger Threshold First Pass Completed
+
+- Added pre-last-layer fields to the M1 lifecycle panel for leakage-safe add-on trigger inference.
+- Implemented add-on trigger threshold mining with TDD coverage for trigger frame filtering, threshold evaluation, and strategy/layer threshold extraction.
+- Generated `outputs/add_on_trigger_thresholds.csv` and `outputs/add_on_trigger_thresholds.md`.
+- Key result: delayed add-ons are well explained by adverse move from previous layer, with strategy-specific thresholds around 1.6, 2.1, 3.1, or 5.4 XAUUSD points depending on strategy family.

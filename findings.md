@@ -696,3 +696,49 @@ Interpretation:
 - The main T1/T2/T3 families have tight delayed spacing around ~1.6 or ~3.2 XAUUSD points, while T5/S09 uses much wider spacing around ~5.4 points.
 - Exit behavior appears close to small positive basket-VWAP TP thresholds for T1/T2/T3 (~0.65-0.71 points) and larger thresholds for T4/T5/T6 families.
 - Next step should mine per-minute add-on and exit classifier rules from `basket_minute_lifecycle.parquet`, using `pre_open_*` for add-ons and `open_*` state for exits.
+
+## Phase 5 Add-on Trigger Threshold Mining
+
+Generated:
+
+- `src/qq_research/add_on_trigger_mining.py`
+- `scripts/phase5_add_on_trigger_mining.py`
+- `tests/test_add_on_trigger_mining.py`
+- `outputs/add_on_trigger_thresholds.csv`
+- `outputs/add_on_trigger_thresholds.md`
+
+Method:
+
+- Uses `basket_minute_lifecycle.parquet` rows with `pre_open_layer_count > 0`.
+- Positive labels are delayed/grid add-on minutes with an existing basket state.
+- Added pre-last-layer lifecycle features:
+  - `pre_last_entry_price`
+  - `minutes_since_pre_last_entry`
+  - `adverse_from_pre_last_entry_points`
+- Main rule form tested per strategy/layer:
+  - `adverse_from_pre_last_entry_points >= adverse_q25`
+- This uses the basket state before the add-on opens in that minute, avoiding leakage from the new layer.
+
+Key thresholds by strategy, focusing on early layers:
+
+| Strategy | Prior layer 1 q25 / median adverse | Prior layer 2 q25 / median adverse | Typical minutes median |
+|---|---:|---:|---:|
+| `T1/S01` | 1.46 / 1.74 | 1.68 / 1.83 | 30-44m |
+| `T2/S03` | 1.62 / 1.79 | 1.70 / 1.95 | 22-23m |
+| `T2/S04` | 1.55 / 1.75 | 1.65 / 1.76 | 18-33m |
+| `T3/S06` | 3.00 / 3.18 | 3.02 / 3.11 | 111-144m |
+| `T4/S08` | 1.64 / 1.85 | 1.69 / 1.90 | 13-16m |
+| `T5/S09` | 5.03 / 5.58 | 5.40 / 5.65 | 104-118m |
+| `T5/S10` | 3.19 / 3.38 | 2.83 / 3.43 | 130-310m |
+| `T6/S12` | 1.95 / 2.13 | 2.02 / 2.18 | 44-55m |
+
+Interpretation:
+
+- Add-on trigger behavior is strongly consistent with strategy-specific adverse-distance thresholds from the previous layer.
+- The first two prior-layer thresholds are very stable inside each family:
+  - T1/T2/T4: ~1.5-1.7 points q25, ~1.75-1.95 median.
+  - T3/T5/S10: ~3.0 points q25/median.
+  - T5/S09: ~5.0-5.6 points.
+  - T6/S12: ~2.0-2.2 points.
+- Precision varies because threshold-only rules still match many candidate minutes, especially early layers with long basket exposure, but lift is strong for most strategy/layer cells.
+- Next step should add a time gate and/or layer-specific cooldown to improve precision, then test a simple add-on simulator using these thresholds.
