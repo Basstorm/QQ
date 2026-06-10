@@ -373,3 +373,41 @@ Interpretation:
 - Explicit `T/S` labels remain the strongest evidence for active strategy identity.
 - The marketed 12 strategies are still not all observed in this backtest; forced 12 clusters should not be interpreted as proof of 12 active strategies.
 - Phase 4 should use explicit strategies as supervised reference groups, then use cluster regimes as auxiliary behavioral slices for rule inference.
+
+## Phase 4 Initial Compact-Feature Rule Inference Findings
+
+Generated:
+
+- `src/qq_research/rule_inference.py`
+- `scripts/phase4_rule_inference.py`
+- `tests/test_rule_inference.py`
+- `outputs/strategy_profiles.md`
+
+Scope:
+
+- This is an initial compact-feature pass, not a final exact rule recovery.
+- Entry inference uses only `is_initial_entry == True` rows to avoid mixing add-ons into M15 signal context.
+- Each explicit strategy `T*/S*` is profiled against other strategies using median/IQR effect-size contrasts for entry context and basket/M1 management features.
+
+Initial candidate classifications from compact features:
+
+| Strategy | Candidate family | Confidence |
+|---|---|---|
+| `T1/S01` | overbought momentum / trend continuation context | low |
+| `T2/S03` | overbought momentum / trend continuation context | low |
+| `T2/S04` | overbought momentum / trend continuation context | low |
+| `T3/S06` | oversold pullback / downtrend continuation context | low |
+| `T4/S08` | trend breakout / momentum continuation | medium |
+| `T5/S09` | trend breakout / momentum continuation | medium |
+| `T5/S10` | overbought momentum / trend continuation context | low |
+| `T6/S12` | downtrend breakout / short momentum continuation | medium |
+
+Notable observations:
+
+- `T3/S06` remains distinct: short-only, low RSI, high negative DMI, below-EMA context, large negative PnL, and wider add-on price spacing.
+- `T4/S08` and `T5/S09` show stronger compact-feature evidence for trend breakout / momentum continuation.
+- Several long-only strategies (`T1/S01`, `T2/S03`, `T2/S04`, `T5/S10`) share overbought/trend-continuation signatures but have low confidence under the compact feature set, so they are candidates for expanded indicator/parameter discovery.
+
+Next implication:
+
+- Before treating low-confidence profiles as useful rules, run the expanded indicator/parameter-discovery fallback requested by the user if more precise `Sxx` separation is needed.

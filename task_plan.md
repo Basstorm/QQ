@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** pending
+**Status:** initial compact-feature pass complete
 
 Objectives:
 

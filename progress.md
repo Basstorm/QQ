@@ -210,3 +210,15 @@ Immediate Phase 2 tasks:
   - Switched silhouette diagnostics to Manhattan distance; script output is clean.
 - Excluded absolute price level features after observing early clusters were influenced by historical price regime.
 - Current Phase 3 result: natural KMeans k=3, forced k=12 generated, 8 active explicit strategies confirmed.
+
+### Phase 4 Initial Compact-Feature Rule Inference Completed
+
+- Created Phase 3 checkpoint commit `2e8f99c Add Phase 3 strategy discovery checkpoint.`
+- User clarified that expanded indicator discovery should not be limited to named examples; broad `pandas-ta`/compatible public indicators should be considered if compact features are insufficient.
+- Implemented TDD tests for:
+  - strategy-vs-rest feature contrast ranking,
+  - simple candidate family classification,
+  - strategy profile report uncertainty and expanded-indicator fallback text.
+- Implemented `src/qq_research/rule_inference.py` and `scripts/phase4_rule_inference.py`.
+- Generated `outputs/strategy_profiles.md`.
+- Current Phase 4 is an initial compact-feature pass; several strategies remain low confidence and should trigger expanded indicator/parameter discovery if more precise rules are required.
