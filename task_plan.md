@@ -88,7 +88,7 @@ Expected outputs:
 
 ## Phase 1 — Trade Reconstruction and Time Alignment
 
-**Status:** ready to start
+**Status:** complete
 
 Objectives:
 
@@ -116,7 +116,7 @@ Expected outputs:
 
 ## Phase 2 — Feature Engineering
 
-**Status:** pending
+**Status:** ready to start
 
 Objectives:
 

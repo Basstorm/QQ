@@ -91,3 +91,20 @@ Ready to begin Phase 0 data audit.
 Error encountered:
 
 - Initial script used `np.where` to create strategy labels and failed because pandas evaluated the NaN branch for exit rows. Fixed by assigning strategy only on rows where both `T` and `S` are present.
+
+
+### Phase 1 Trade Reconstruction Completed
+
+- Added TDD tests for strategy comment parsing, FIFO reconstruction, basket grouping, and Phase 1 seconds diagnostics.
+- Implemented `src/qq_research/reconstruction.py`.
+- Implemented `scripts/phase1_reconstruct_trades.py`.
+- Generated normalized trade, position, and basket parquet files.
+- Generated `outputs/time_alignment_report.md`.
+- Verified tests pass with `python -m unittest discover`.
+- Verified parquet output shapes:
+  - `trades_normalized.parquet`: 11,310 rows x 31 columns
+  - `positions.parquet`: 6,100 rows x 27 columns
+  - `baskets.parquet`: 1,657 rows x 14 columns
+- Verified reconstructed PnL equals report exit-profit total exactly.
+
+Ready to begin Phase 2 feature engineering.

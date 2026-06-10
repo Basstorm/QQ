@@ -228,3 +228,51 @@ Timezone / alignment finding:
 - All-deal match rate at tolerance 0.25: 99.08% for offset 0.
 - Entry-only match rate at tolerance 0.25: 98.27% for offset 0.
 - Interpretation: for joining report trades to provided candles, use `broker_time` directly with no shift. If report time is GMT+3, then the provided CSV data should also be treated as the same broker/server clock despite the `+00:00` suffix. For session labeling, keep a derived `utc_time_est = broker_time - 3h` until broker timezone/DST policy is fully confirmed.
+
+
+## Phase 1 Trade Reconstruction Findings
+
+Generated:
+
+- `scripts/phase1_reconstruct_trades.py`
+- `src/qq_research/reconstruction.py`
+- `tests/test_reconstruction.py`
+- `tests/test_phase1_report.py`
+- `outputs/trades_normalized.parquet`
+- `outputs/positions.parquet`
+- `outputs/baskets.parquet`
+- `outputs/time_alignment_report.md`
+
+Key findings:
+
+- Parsed XAUUSD deals: 11,310.
+- Entry deals: 5,655.
+- Exit deals: 5,655.
+- FIFO directional reconstruction creates 6,100 position fragments.
+- Reconstructed analytical baskets: 1,657.
+- Estimated position PnL exactly matches reported exit-deal profit sum: `1,347,268.41`, difference `0.0`.
+- This validates using FIFO matching to assign blank exit comments back to original entry strategy tags.
+- M1 alignment remains strong at offset `0h`: all-deal tolerance-0.25 match rate `0.9908`, entry-deal match rate `0.9827`.
+
+Strategy-level reconstructed position summary:
+
+| Strategy | Positions | Baskets | PnL est | Avg hold min |
+|---|---:|---:|---:|---:|
+| `T1/S01` | 1,769 | 459 | 4,625,172.10 | 484.36 |
+| `T2/S03` | 1,193 | 318 | 2,774,986.27 | 369.10 |
+| `T2/S04` | 1,231 | 378 | 2,246,850.28 | 200.16 |
+| `T3/S06` | 402 | 99 | -14,994,461.54 | 4,445.38 |
+| `T4/S08` | 231 | 58 | 1,014,496.77 | 110.87 |
+| `T5/S09` | 234 | 71 | 1,520,356.22 | 374.85 |
+| `T5/S10` | 386 | 108 | 2,101,890.16 | 624.31 |
+| `T6/S12` | 654 | 166 | 2,057,978.15 | 216.66 |
+
+Timing diagnostics:
+
+- All entry deals at broker minute `% 15 == 0`: 38.66%.
+- Basket first entries at broker minute `% 15 == 0`: 62.70%.
+- Do not conclude yet that M15 entry gating is false. Entry deals include add-ons, and reconstructed baskets are analytical interval groups rather than native EA cycle IDs. Phase 2 should refine initial-entry detection before evaluating the M15-entry hypothesis.
+
+Bug fixed during Phase 1:
+
+- Initial `Seconds Diagnostics` table accidentally double-counted value-count results and displayed impossible seconds like `790`. Added a regression test and fixed report generation to count raw second values.
