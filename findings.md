@@ -411,3 +411,84 @@ Notable observations:
 Next implication:
 
 - Before treating low-confidence profiles as useful rules, run the expanded indicator/parameter-discovery fallback requested by the user if more precise `Sxx` separation is needed.
+
+## Phase 4 Expanded Indicator / Parameter Discovery Findings
+
+Generated:
+
+- `src/qq_research/expanded_indicator_discovery.py`
+- `scripts/phase4_expanded_indicator_discovery.py`
+- `tests/test_expanded_indicator_discovery.py`
+- `outputs/expanded_indicator_discovery_report.md`
+- `outputs/expanded_indicator_scores.csv`
+- `outputs/expanded_indicator_feature_matrix.parquet` (large local artifact; not intended for lightweight checkpoint commits)
+
+Scope:
+
+- First-pass expanded search over M15 indicators and parameter variants using `pandas-ta-classic` plus explicit MA stacking/crossover features.
+- Each feature is scored separately per explicit `Sxx`, comparing unique M15 bars with at least one initial basket entry for that strategy against the M15 background.
+- High AUC lift is treated as feature-separation evidence, not proof of the exact EA rule.
+- Raw absolute MA levels are excluded to avoid historical price-regime leakage; retained MA features are slope, close-distance, inter-MA spread, stacking booleans, cross events, and bars-since-cross.
+
+Indicator universe:
+
+- `pandas-ta-classic` exposes 305 lowercase callable names in this environment.
+- First-pass computed families include MA slope/distance/spread/stacking/cross, RSI, CCI, CMO, ROC, MOM, ADX/DMI, AROON, Bollinger Bands, Donchian, Keltner Channels, CHOP, Fisher, AO, BOP, CMF, and EFI.
+- This is broader than compact Phase 4 but still not exhaustive; more pandas-ta families can be added in later passes.
+
+Top single-feature separators by strategy:
+
+| Strategy | Top feature | Direction | AUC lift |
+|---|---|---|---:|
+| `T1/S01` | `fisher_14` | high | 0.3970 |
+| `T2/S03` | `wma_21_minus_wma_50` | high | 0.4401 |
+| `T2/S04` | `roc_20` | high | 0.4581 |
+| `T3/S06` | `rsi_34` | low | 0.4455 |
+| `T4/S08` | `rsi_34` | high | 0.4666 |
+| `T5/S09` | `fisher_9` | high | 0.4723 |
+| `T5/S10` | `fisher_9` | high | 0.3509 |
+| `T6/S12` | `adx_7_dmp_7` | low | 0.4471 |
+
+Interpretation:
+
+- Expanded indicators improve separation for several previously low-confidence strategies.
+- MA spread/slope features appear prominently for `T2/S03`, `T2/S04`, `T3/S06`, `T4/S08`, and others, supporting the user's hypothesis that crossover/stacking-like features may matter.
+- Fisher/CMO/RSI/ADX-family features are frequent top candidates, so small or less-mainstream public indicators may be relevant.
+- Next step should combine top features into multi-condition candidate rules and evaluate false positives/false negatives, rather than relying on single-feature AUC alone.
+
+## Phase 4 Candidate Multi-Condition Rule Mining Findings
+
+Generated:
+
+- `src/qq_research/rule_mining.py`
+- `scripts/phase4_candidate_rule_mining.py`
+- `tests/test_rule_mining.py`
+- `outputs/candidate_rule_combinations.csv`
+- `outputs/candidate_rule_combinations.md`
+
+Method:
+
+- Uses top expanded single-feature candidates per `Sxx`.
+- Builds 1-, 2-, and 3-condition AND rules using each feature's positive-entry median as threshold.
+- Evaluates each rule against all M15 background bars with precision, recall, and precision lift vs base entry rate.
+- These rules are hypotheses, not confirmed source rules.
+
+Top candidate rule per strategy:
+
+| Strategy | Top displayed rule | Precision | Lift vs base | Recall |
+|---|---|---:|---:|---:|
+| `T1/S01` | `fisher_9 >= 2.6333` | 0.0202 | 7.7x | 0.5013 |
+| `T2/S03` | `wma_21_minus_wma_50 >= 4.9460 AND mom_34 >= 15.8350 AND sma_21_minus_sma_50 >= 6.5777` | 0.0474 | 21.3x | 0.4434 |
+| `T2/S04` | `roc_20 >= 0.8012 AND wma_21_minus_wma_50 >= 5.2581` | 0.0686 | 26.0x | 0.4233 |
+| `T3/S06` | `adx_21_dmp_21 <= 11.1566 AND ema_21_minus_ema_50 <= -4.5039` | 0.0138 | 23.8x | 0.3373 |
+| `T4/S08` | `close_minus_ema_50 >= 16.0722 AND adx_21_adx_21 >= 47.5722 AND sma_50_slope_4 >= 2.2950` | 0.0859 | 261.5x | 0.2979 |
+| `T5/S09` | `fisher_14 >= 4.0160 AND adx_7_adx_7 >= 68.9157` | 0.0356 | 76.1x | 0.3881 |
+| `T5/S10` | `fisher_9 >= 2.7380 AND chop_14 <= 38.1306 AND sma_8_minus_sma_21 >= 2.3579` | 0.0110 | 15.1x | 0.2885 |
+| `T6/S12` | `adx_7_dmp_7 <= 4.7437 AND cci_20 <= -174.5160` | 0.0421 | 37.9x | 0.3208 |
+
+Interpretation:
+
+- Absolute precision remains low because initial-entry bars are extremely sparse relative to all M15 bars.
+- Precision lift vs base-rate is more informative for this discovery pass.
+- `T4/S08` has the strongest narrow-rule lift among top candidates, consistent with its clearer compact trend-breakout profile.
+- Rules should next be validated with time/session filters and direction-specific false-positive analysis before being treated as actionable approximate strategy rules.

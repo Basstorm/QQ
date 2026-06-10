@@ -222,3 +222,25 @@ Immediate Phase 2 tasks:
 - Implemented `src/qq_research/rule_inference.py` and `scripts/phase4_rule_inference.py`.
 - Generated `outputs/strategy_profiles.md`.
 - Current Phase 4 is an initial compact-feature pass; several strategies remain low confidence and should trigger expanded indicator/parameter discovery if more precise rules are required.
+
+### Phase 4 Expanded Indicator / Parameter Discovery First Pass Completed
+
+- Created Phase 4 compact checkpoint commit `b4eb7fc Add Phase 4 compact rule inference checkpoint.`
+- Implemented expanded indicator discovery with TDD coverage for:
+  - MA stacking/cross/spread feature generation,
+  - strategy entry labels on M15 bars,
+  - per-strategy AUC-lift scoring.
+- Generated expanded outputs:
+  - `outputs/expanded_indicator_discovery_report.md`,
+  - `outputs/expanded_indicator_scores.csv`,
+  - `outputs/expanded_indicator_feature_matrix.parquet`.
+- Code review identified and fixed absolute MA level leakage; raw MA levels are now excluded from expanded features.
+- First-pass matrix contains 143,097 M15 rows and 137 generated feature columns after excluding raw MA levels.
+- Top candidates include Fisher, WMA spread, ROC, RSI, and ADX/DMI features depending on strategy.
+
+### Phase 4 Candidate Multi-Condition Rule Mining Completed
+
+- Implemented rule mining with TDD coverage for condition generation, AND-rule evaluation, precision/recall/base-rate lift, and report generation.
+- Generated `outputs/candidate_rule_combinations.csv` and `outputs/candidate_rule_combinations.md`.
+- Added precision lift vs base-rate after observing raw precision can look misleadingly low because initial-entry bars are extremely sparse.
+- Candidate rules now provide interpretable 1-3 condition hypotheses per active `Sxx`.
