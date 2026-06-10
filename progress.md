@@ -108,3 +108,50 @@ Error encountered:
 - Verified reconstructed PnL equals report exit-profit total exactly.
 
 Ready to begin Phase 2 feature engineering.
+
+
+### Pre-Compaction Checkpoint Before Phase 2
+
+Current state before user-triggered context compaction:
+
+- Phase 0 is complete.
+- Phase 1 is complete.
+- Phase 2 is ready to start.
+- Local git is tracking the lightweight project state.
+- Raw data, `.venv`, parquet outputs, and runtime context snapshots remain local-only via `.gitignore`.
+
+Latest commits:
+
+- `9d93a6b Add Phase 1 trade reconstruction.`
+- `9781a18 Add Phase 0 data audit.`
+- `231cd70 Add uv-managed analysis environment.`
+- `c9d58f0 Initialize local analysis tracking.`
+
+Files to read after compaction, in order:
+
+1. `task_plan.md` — confirms Phase 2 is ready to start.
+2. `findings.md` — durable project findings from MQL5, Phase 0, Phase 1.
+3. `progress.md` — chronological work log and checkpoint.
+4. `outputs/data_audit_report.md` — Phase 0 summary.
+5. `outputs/time_alignment_report.md` — Phase 1 summary.
+6. `src/qq_research/reconstruction.py` — reusable parsing/reconstruction functions.
+7. `scripts/phase1_reconstruct_trades.py` — how Phase 1 parquet files are generated.
+
+Phase 2 starting point:
+
+- Use `outputs/trades_normalized.parquet`, `outputs/positions.parquet`, and `outputs/baskets.parquet` as local source tables.
+- Build feature engineering on top of reconstructed positions/baskets, preserving `strategy`, `T`, `S`, `broker_time`, and `utc_time_est`.
+- Join candles using broker/report time with offset `0h`; do not shift when joining to the provided CSVs.
+- For session analysis only, derive `utc_time_est = broker_time - 3h` because user recalls report/export time is GMT+3.
+- Be careful evaluating the M15-entry claim: raw entry deals include add-ons; Phase 2 needs a better initial-entry/add-on distinction.
+
+Immediate Phase 2 tasks:
+
+1. Add tests for candle feature helpers and position/basket feature construction.
+2. Create feature module/script to compute:
+   - M15 entry context features.
+   - M1 post-entry management path features.
+   - Time/session features in both broker time and estimated UTC.
+   - Basket/order-structure features.
+3. Generate `outputs/deal_features.parquet`, `outputs/basket_features.parquet`, and `outputs/feature_dictionary.md`.
+4. Produce a short Phase 2 report before moving to clustering/rule inference.

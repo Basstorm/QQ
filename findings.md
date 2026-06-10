@@ -276,3 +276,25 @@ Timing diagnostics:
 Bug fixed during Phase 1:
 
 - Initial `Seconds Diagnostics` table accidentally double-counted value-count results and displayed impossible seconds like `790`. Added a regression test and fixed report generation to count raw second values.
+
+
+## Phase 2 Readiness Notes
+
+Phase 2 should start from the Phase 1 parquet outputs:
+
+- `outputs/trades_normalized.parquet`
+- `outputs/positions.parquet`
+- `outputs/baskets.parquet`
+
+Critical invariants established before Phase 2:
+
+- Strategy labels are explicit on entry deals and preserved through FIFO reconstruction.
+- Exit comments are blank, but directional FIFO matching reconstructs strategy attribution exactly at total PnL level.
+- Reconstructed position PnL exactly equals reported exit-deal profit total: `1,347,268.41`.
+- Use offset `0h` for joining report timestamps to provided M1/M15 CSV candles.
+- Treat CSV timestamps as broker/server-time aligned despite their `+00:00` suffix.
+- Keep estimated UTC fields for session analysis using `broker_time - 3h`, pending any later DST/server-time refinement.
+- Active strategies in this report are: `T1/S01`, `T2/S03`, `T2/S04`, `T3/S06`, `T4/S08`, `T5/S09`, `T5/S10`, `T6/S12`.
+- `T3/S06` is a major outlier with large negative reconstructed PnL and long average holding time; prioritize it in later profiling.
+
+Phase 2 should not assume every entry deal is an initial signal. Many entry deals are likely add-ons. Initial-entry detection must be derived carefully from reconstructed positions/baskets and timing/overlap context.
