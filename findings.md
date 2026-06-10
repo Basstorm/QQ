@@ -623,3 +623,76 @@ Interpretation:
 - `T2/S04` was robust as an entry classifier, but its naive rule-on/rule-off trade management is near flat to negative.
 - `T5/S10` matched-context rule is a strong entry-bar classifier but overtrades and loses under naive exits.
 - This supports the hypothesis that Quantum Queen's performance depends heavily on basket/grid/TP management and/or additional exit filters; initial-entry filters alone are not enough to reproduce EA returns.
+
+## Phase 5 Basket Lifecycle Management Diagnostics
+
+Generated:
+
+- `src/qq_research/lifecycle_management.py`
+- `scripts/phase5_lifecycle_management.py`
+- `tests/test_lifecycle_management.py`
+- `outputs/lifecycle_add_on_events.parquet`
+- `outputs/lifecycle_exit_events.parquet`
+- `outputs/basket_minute_lifecycle.parquet`
+- `outputs/lifecycle_management_report.md`
+
+Purpose:
+
+- Shift focus from initial-entry filters to QQ's high-win-rate basket management.
+- Entry filters remain approximated by the robust Phase 4 rules for now.
+- Phase 5 first pass reconstructs add-on, exit, and active M1 basket state features from actual QQ trades.
+
+Generated datasets:
+
+- Add-on events: 4,443 total.
+- Delayed/grid add-on events: 1,215 after excluding same-minute add-ons/splits.
+- Exit events / baskets: 1,657.
+- Active basket-minute lifecycle rows: 240,987.
+- Lifecycle includes `pre_open_*` fields so add-on trigger inference can use the basket state before a new layer opens in that minute.
+
+Key counts and win rates:
+
+| Strategy | Baskets | Same-minute add-ons | Delayed add-ons | Basket win rate % | Median basket PnL |
+|---|---:|---:|---:|---:|---:|
+| `T1/S01` | 459 | 942 | 368 | 98.47 | 1096.16 |
+| `T2/S03` | 318 | 663 | 212 | 97.80 | 991.42 |
+| `T2/S04` | 378 | 623 | 230 | 99.47 | 877.52 |
+| `T3/S06` | 99 | 243 | 60 | 98.99 | 854.70 |
+| `T4/S08` | 58 | 98 | 75 | 100.00 | 2718.45 |
+| `T5/S09` | 71 | 119 | 44 | 100.00 | 2265.12 |
+| `T5/S10` | 108 | 223 | 55 | 88.89 | 499.48 |
+| `T6/S12` | 166 | 317 | 171 | 100.00 | 1382.38 |
+
+Delayed/grid add-on adverse spacing from previous entry, median points:
+
+| Strategy | Median adverse spacing |
+|---|---:|
+| `T1/S01` | 1.64 |
+| `T2/S03` | 1.62 |
+| `T2/S04` | 1.68 |
+| `T3/S06` | 3.20 |
+| `T4/S08` | 1.80 |
+| `T5/S09` | 5.41 |
+| `T5/S10` | 3.14 |
+| `T6/S12` | 2.24 |
+
+Exit move from basket entry VWAP, median points:
+
+| Strategy | Median exit move from VWAP |
+|---|---:|
+| `T1/S01` | 0.71 |
+| `T2/S03` | 0.68 |
+| `T2/S04` | 0.66 |
+| `T3/S06` | 0.65 |
+| `T4/S08` | 1.70 |
+| `T5/S09` | 2.25 |
+| `T5/S10` | 2.05 |
+| `T6/S12` | 1.20 |
+
+Interpretation:
+
+- QQ's very high basket win rate is real in reconstructed data and strongly supports prioritizing basket management inference.
+- A large share of add-ons are same-minute splits or simultaneous layer opens; true grid add-ons should be studied using delayed add-ons only.
+- The main T1/T2/T3 families have tight delayed spacing around ~1.6 or ~3.2 XAUUSD points, while T5/S09 uses much wider spacing around ~5.4 points.
+- Exit behavior appears close to small positive basket-VWAP TP thresholds for T1/T2/T3 (~0.65-0.71 points) and larger thresholds for T4/T5/T6 families.
+- Next step should mine per-minute add-on and exit classifier rules from `basket_minute_lifecycle.parquet`, using `pre_open_*` for add-ons and `open_*` state for exits.

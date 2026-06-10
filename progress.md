@@ -267,3 +267,11 @@ Immediate Phase 2 tasks:
 - Implemented robust-rule vectorbt smoke backtest with TDD coverage for rule-mask evaluation, edge-signal generation, and robust-variant selection.
 - Generated `outputs/robust_vectorbt_backtest.csv` and `outputs/robust_vectorbt_backtest.md`.
 - Result: standalone long-only rule-on/rule-off backtests are weak; only `T2/S03` is modestly positive, supporting the conclusion that robust entry contexts are not sufficient without Quantum Queen's basket/exit management.
+
+### Phase 5 Basket Lifecycle Diagnostics First Pass Completed
+
+- Started Phase 5 after observing robust entry filters alone are weak standalone strategies and QQ's high win rate likely comes from basket management.
+- Implemented lifecycle management feature generation with TDD coverage for add-on spacing, exit VWAP TP features, and M1 basket lifecycle rows.
+- Generated add-on events, exit events, and active basket-minute lifecycle parquet outputs plus `outputs/lifecycle_management_report.md`.
+- Key finding: delayed/grid add-on spacing is strategy-specific and tight for T1/T2 (~1.6 points), wider for T3/T5/T6; exit moves from entry VWAP are small and strategy-specific.
+- The lifecycle panel includes `pre_open_*` features for true per-minute add-on trigger inference.

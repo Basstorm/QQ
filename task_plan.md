@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** robust strategy vectorbt smoke backtest complete
+**Status:** Phase 5 basket lifecycle diagnostics first pass complete
 
 Objectives:
 
