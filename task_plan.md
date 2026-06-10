@@ -66,7 +66,7 @@ Version/page details observed:
 
 ## Phase 0 — Environment and Data Audit
 
-**Status:** pending
+**Status:** ready to start
 
 Objectives:
 

@@ -126,3 +126,56 @@ Recovery procedure after compaction:
 3. Read `progress.md`.
 4. Read `.planning/context/latest_context.md`.
 5. Continue from the latest incomplete phase in `task_plan.md`.
+
+
+## Python / uv Analysis Environment
+
+The project is now managed as a uv project:
+
+- `pyproject.toml` created with project name `quantum-queen-research`.
+- `uv.lock` created by `uv add`.
+- Dependencies installed into the project `.venv`.
+
+Installed analysis dependencies:
+
+- pandas `2.3.3`
+- openpyxl `3.1.5`
+- numpy `2.2.6`
+- scipy `1.15.3`
+- scikit-learn `1.7.2`
+- polars `1.41.2`
+- pyarrow `24.0.0`
+- matplotlib `3.10.9`
+- seaborn `0.13.2`
+- plotly `6.8.0`
+- statsmodels `0.14.6`
+
+Use commands like:
+
+```bash
+uv --project /Users/fedong/sources/QuantumQueenResearch run python your_script.py
+```
+
+Network-dependent `uv add` commands require the local proxy:
+
+```bash
+HTTP_PROXY=http://127.0.0.1:7897 HTTPS_PROXY=http://127.0.0.1:7897 \
+http_proxy=http://127.0.0.1:7897 https_proxy=http://127.0.0.1:7897 \
+uv --project /Users/fedong/sources/QuantumQueenResearch add <packages>
+```
+
+## Initial Excel Read Validation
+
+`QuantumQueen_backtest_report.xlsx` can be read with pandas/openpyxl.
+
+Observed workbook structure:
+
+- Sheets: `Sheet1` only.
+- First rows indicate this is a Chinese MT5 strategy test report.
+- Broker/server line: `EBCFinancialGroupKY-Live01 (Build 5836)`.
+- Expert line: `Quantum Queen 3.52(2)`.
+- Symbol: `XAUUSD`.
+
+Important implication:
+
+- The analyzed backtest appears to be for EA version `3.52(2)`, not the currently published page version `3.70`. Version-specific behavior must be considered.

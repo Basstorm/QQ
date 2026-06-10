@@ -61,3 +61,18 @@ export https_proxy=http://127.0.0.1:7897
 - Manually tested `PostCompaction` behavior and confirmed `.planning/context/restore_after_compaction.md` is written.
 
 Note: current Devin docs do not list a `PreCompaction` hook. Pre-compaction safety is handled by frequent snapshots before compaction-triggering moments rather than a dedicated pre-compaction event.
+
+
+### Dependency and Data Readiness Check
+
+- Converted the directory into a uv-managed project with `pyproject.toml` and `uv.lock`.
+- Installed core analysis dependencies through `uv add` using the local proxy.
+- Verified imports for pandas, openpyxl, numpy, scipy, scikit-learn, polars, pyarrow, matplotlib, seaborn, plotly, and statsmodels.
+- Verified `QuantumQueen_backtest_report.xlsx` opens successfully.
+- Verified both CSV files can be read with pandas.
+- Initial Excel inspection shows one sheet, `Sheet1`, with MT5 report metadata:
+  - Server/build: `EBCFinancialGroupKY-Live01 (Build 5836)`
+  - Expert: `Quantum Queen 3.52(2)`
+  - Symbol: `XAUUSD`
+
+Ready to begin Phase 0 data audit.
