@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** expanded indicator first pass complete
+**Status:** temporal validation first pass complete
 
 Objectives:
 

@@ -244,3 +244,12 @@ Immediate Phase 2 tasks:
 - Generated `outputs/candidate_rule_combinations.csv` and `outputs/candidate_rule_combinations.md`.
 - Added precision lift vs base-rate after observing raw precision can look misleadingly low because initial-entry bars are extremely sparse.
 - Candidate rules now provide interpretable 1-3 condition hypotheses per active `Sxx`.
+
+### Phase 4 Temporal and Matched-Negative Validation First Pass Completed
+
+- Created checkpoint commit `646f2d3 Add Phase 4 expanded indicator discovery checkpoint.`
+- Implemented temporal validation without writing a formal spec per user instruction.
+- Added TDD tests for temporal splitting, rule parsing, matched context masking, period evaluation, and train-rule/test evaluation.
+- Generated `outputs/temporal_rule_validation.csv`, `outputs/temporal_train_feature_scores.csv`, and `outputs/temporal_rule_validation.md`.
+- Default split is `2021-01-01`, selected after checking yearly positive-count balance.
+- Validation shows `T2/S03` and `T2/S04` have the strongest temporally stable MA/momentum rule signals; sparse strategies still require caution.

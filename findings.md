@@ -492,3 +492,54 @@ Interpretation:
 - Precision lift vs base-rate is more informative for this discovery pass.
 - `T4/S08` has the strongest narrow-rule lift among top candidates, consistent with its clearer compact trend-breakout profile.
 - Rules should next be validated with time/session filters and direction-specific false-positive analysis before being treated as actionable approximate strategy rules.
+
+## Phase 4 Temporal and Matched-Negative Validation Findings
+
+Generated:
+
+- `src/qq_research/temporal_validation.py`
+- `scripts/phase4_temporal_validation.py`
+- `tests/test_temporal_validation.py`
+- `outputs/temporal_rule_validation.csv`
+- `outputs/temporal_train_feature_scores.csv`
+- `outputs/temporal_rule_validation.md`
+
+Method:
+
+- Uses split time `2021-01-01` because it gives the most balanced train/test positive counts among checked yearly splits.
+- Rules are mined only on train rows before the split, then evaluated unchanged on test rows at/after the split.
+- Two validation modes are reported:
+  - `all_background`: compare entries with all M15 bars in the period.
+  - `matched_hour_weekday`: compare entries with non-entry bars from the same broker weekday/hour contexts.
+- Matched mode is stricter but can produce very small matched counts for sparse strategies; always inspect `Test matched` before trusting a high lift.
+
+Positive sample counts:
+
+| Strategy | Train positives | Test positives |
+|---|---:|---:|
+| `T1/S01` | 196 | 181 |
+| `T2/S03` | 153 | 165 |
+| `T2/S04` | 187 | 191 |
+| `T3/S06` | 42 | 41 |
+| `T4/S08` | 28 | 19 |
+| `T5/S09` | 38 | 29 |
+| `T5/S10` | 57 | 47 |
+| `T6/S12` | 92 | 67 |
+
+Top all-background train/test-stable signals:
+
+| Strategy | Example rule | Train lift | Test lift | Test recall |
+|---|---|---:|---:|---:|
+| `T1/S01` | `fisher_9 + wma_21_slope_4 + ema_8_slope_4` | 9.6x | 9.0x | 0.425 |
+| `T2/S03` | `wma_21_minus_wma_50 + ao + roc_34` | 15.2x | 15.6x | 0.564 |
+| `T2/S04` | `roc_20 + wma_21_minus_wma_50 + wma_21_slope_4` | 27.2x | 26.0x | 0.487 |
+| `T3/S06` | `rsi_34 low + ema_21_minus_ema_50 low + wma_50_slope_4 low` | 24.8x | 13.7x | 0.366 |
+| `T5/S10` | `fisher_14 + wma_8_minus_wma_21 + adx_7` | 10.8x | 10.8x | 0.383 |
+| `T6/S12` | `adx_7_dmp low + cci_20 low + cmo_9 low` | 53.8x | 36.8x | 0.164 |
+
+Key interpretation:
+
+- `T2/S03` and `T2/S04` look materially stronger after temporal validation: MA spread/slope plus momentum features retain similar train/test lifts and decent test recall.
+- `T1/S01` and `T5/S10` retain modest but stable train/test lift; they remain broader momentum/oscillator-context rules, not precise entries.
+- `T3/S06` and `T6/S12` retain bearish/short-side validation signals, but `T3/S06` still has low absolute precision and small positive counts.
+- `T4/S08` and `T5/S09` show high lift but weak test recall and very small matched-mode test matched counts; treat them as sparse-rule hints, not robust rule recovery.
