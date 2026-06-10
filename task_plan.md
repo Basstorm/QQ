@@ -204,7 +204,7 @@ Expected outputs:
 
 ## Phase 4 — Approximate Rule Inference
 
-**Status:** Phase 5 exit first-cross analysis complete
+**Status:** Phase 5 T5/S10 exit path diagnostics complete
 
 Objectives:
 

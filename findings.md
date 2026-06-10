@@ -903,3 +903,69 @@ Interpretation:
 - Core families (`T1/S01`, `T2/S03`, `T2/S04`, `T3/S06`, `T5/S09`, `T6/S12`) are broadly consistent with M1 close-based VWAP TP exits.
 - `T5/S10` remains an outlier: first close-cross occurs far before actual exits, supporting the earlier hypothesis that it uses mixed/path-dependent exit logic or a different TP regime.
 - Large q90 lags for some T1/T2 cells show that a subset of baskets touch TP early but are not closed quickly; these may involve spread filters, session filters, minimum profit-money thresholds, partial close behavior, or later-layer special handling.
+
+## Phase 5 T5/S10 Exit Path Diagnostics
+
+Generated:
+
+- `src/qq_research/s10_exit_diagnostics.py`
+- `scripts/phase5_s10_exit_diagnostics.py`
+- `tests/test_s10_exit_diagnostics.py`
+- `outputs/s10_exit_path_diagnostics.csv`
+- `outputs/s10_exit_path_summary.csv`
+- `outputs/s10_exit_path_diagnostics.md`
+
+Context:
+
+- User confirmed QQ checks live exits approximately once per minute and closes on minute boundaries. This supports the earlier `close_q25` result over intrabar `touch_q25`.
+- `T5/S10` was the major outlier under the common close-cross TP analysis: first close-cross often occurred far before actual exit.
+
+Key S10 path results:
+
+- S10 has 108 baskets in the current lifecycle panel.
+- Overall exit move distribution:
+  - q25: `0.80`
+  - median: `2.00`
+  - q75: `3.40`
+  - q90: `4.41`
+- Overall max close move distribution:
+  - q25: `1.10`
+  - median: `2.13`
+  - q75: `3.63`
+  - q90: `5.04`
+- Actual S10 exits are usually close to the path maximum:
+  - median retrace from max close move to exit: `0.11`
+  - q75 retrace: `0.40`
+  - median minutes from max close move to actual exit: `1.0`
+  - `82.4%` of baskets exit within 1 minute of max close move.
+  - `68.5%` have retrace <= `0.25` points at exit.
+  - `63.9%` satisfy both max-to-exit <= 1 minute and retrace <= 0.25.
+
+Layer-specific S10 medians:
+
+| Exit layers | Baskets | Exit median | Exit q25 | Exit q75 | Max median | Retrace median | Holding median | Max-to-exit median | Max-to-exit <=1m % |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 62 | 1.28 | 0.55 | 2.98 | 1.58 | 0.10 | 190.5 | 1.0 | 77.4 |
+| 2 | 13 | 2.25 | 0.22 | 3.71 | 2.25 | 0.09 | 276.0 | 1.0 | 84.6 |
+| 3 | 6 | 2.70 | 2.11 | 3.11 | 3.10 | 0.08 | 953.0 | 1.0 | 83.3 |
+| 4 | 7 | 3.33 | 2.48 | 3.50 | 3.52 | 0.20 | 637.0 | 1.0 | 100.0 |
+| 6 | 5 | 2.04 | 2.02 | 2.24 | 2.15 | 0.01 | 371.0 | 1.0 | 100.0 |
+| 8 | 6 | 1.33 | 0.08 | 1.61 | 1.58 | 0.14 | 10.0 | 0.5 | 83.3 |
+
+Time/session features:
+
+- Entry hour is highly concentrated: 94/108 S10 baskets start at broker hour `22`.
+- Exit hour is bimodal-ish:
+  - 42 baskets exit in broker hours `21-23`, with median holding `17.5` minutes and median exit move `1.085`.
+  - 39 baskets exit in broker hours `01-04`, with median holding `295` minutes and median exit move `1.74`.
+  - Later exits (`05-20`) generally have higher exit medians around `2.9-4.3` and longer holding times.
+
+Interpretation:
+
+- S10 does not look like a simple trailing exit where QQ hits TP early and waits through a large retrace. Actual exits occur close to the path maximum in most baskets.
+- S10's poor `close_q25` first-cross timing is mostly because the q25 threshold is too low for many S10 modes, not because the EA ignores a reached high-water mark for long periods.
+- A single fixed TP is unlikely for S10. It likely has time/session-conditioned or mode-conditioned TP behavior:
+  - quick 22:00-session exits with lower targets,
+  - overnight / late-session exits with higher effective targets,
+  - some loss or low-profit timeout exits.
+- S10 should be modeled separately from the common T1/T2/T3/T4/T5-S09/T6 close_q25 basket VWAP TP rule.

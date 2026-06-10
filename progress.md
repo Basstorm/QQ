@@ -301,3 +301,9 @@ Immediate Phase 2 tasks:
 - Implemented first-cross/first-touch exit analysis with tests.
 - Generated `outputs/exit_first_cross_events.csv`, `outputs/exit_first_cross_summary.csv`, and `outputs/exit_first_cross_report.md`.
 - Result: `close_q25` is the best first approximation. It finds TP crosses in 83.3% of baskets and core strategy families usually exit within ~1 minute after first M1 close-cross. Intrabar touch fires too early, and T5/S10 remains a major outlier.
+
+### Phase 5 T5/S10 Exit Path Diagnostics Completed
+
+- Implemented S10-specific path diagnostics and generated `outputs/s10_exit_path_diagnostics.md/.csv` and `outputs/s10_exit_path_summary.csv`.
+- User confirmed QQ live exits are checked about once per minute and close on minute boundaries, supporting close-based rather than intrabar-touch exit inference.
+- Result: S10 actual exits are usually near the basket's max close move, with median max-to-exit lag 1 minute and median retrace only 0.11 points. S10 is therefore not mainly a trailing/retrace exit. It appears mode/time/session-conditioned: 94/108 starts are at broker hour 22, quick 21-23 exits have lower median target, while later/overnight exits require higher effective targets.
