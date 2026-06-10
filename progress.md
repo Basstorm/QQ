@@ -190,3 +190,23 @@ Immediate Phase 2 tasks:
   - Feature-table PnL totals match Phase 1 source tables within floating-point tolerance.
 - Code review found and fixed a path-feature helper inconsistency with custom `entry_time_col`.
 - Code simplification removed an unnecessary merge before basket feature construction.
+
+### Phase 3 Strategy Candidate Discovery Completed
+
+- Created Phase 2 checkpoint commit `9d922b4 Add Phase 2 feature engineering checkpoint.`
+- Started Phase 3 from `outputs/basket_features.parquet` and `outputs/deal_features.parquet`.
+- Added TDD tests for clustering feature selection, matrix scaling, best-k selection, cluster/strategy overlap, and report generation.
+- Implemented `src/qq_research/strategy_discovery.py` and `scripts/phase3_strategy_discovery.py`.
+- Generated Phase 3 outputs:
+  - `outputs/strategy_cluster_assignments.parquet`,
+  - `outputs/strategy_clusters_report.md`,
+  - `outputs/cluster_diagnostics/kmeans_diagnostics.csv`,
+  - `outputs/cluster_diagnostics/best_cluster_strategy_overlap.csv`,
+  - `outputs/cluster_diagnostics/best_cluster_feature_summary.csv`,
+  - `outputs/cluster_diagnostics/clustering_feature_columns.csv`.
+- Debugged sklearn RuntimeWarnings:
+  - Initial root cause involved large zero-IQR columns not scaling under RobustScaler.
+  - After switching to clipped StandardScaler, remaining warning was isolated to Euclidean `silhouette_score` pairwise distance computation, not KMeans or matrix validity.
+  - Switched silhouette diagnostics to Manhattan distance; script output is clean.
+- Excluded absolute price level features after observing early clusters were influenced by historical price regime.
+- Current Phase 3 result: natural KMeans k=3, forced k=12 generated, 8 active explicit strategies confirmed.

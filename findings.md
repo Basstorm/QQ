@@ -338,3 +338,38 @@ Important interpretation:
 
 - The initial-entry timing share is the relevant diagnostic for the user's M15-entry hypothesis; all entry rows include add-ons and therefore should not be expected to align to M15 boundaries.
 - `T3/S06` remains a priority outlier: Phase 2 report shows much larger average MAE points than other strategies, consistent with Phase 1's large negative PnL and long holding times.
+
+## Phase 3 Strategy Candidate Discovery Findings
+
+Generated:
+
+- `src/qq_research/strategy_discovery.py`
+- `scripts/phase3_strategy_discovery.py`
+- `tests/test_strategy_discovery.py`
+- `outputs/strategy_cluster_assignments.parquet`
+- `outputs/strategy_clusters_report.md`
+- `outputs/cluster_diagnostics/`
+
+Method:
+
+- Clustered `outputs/basket_features.parquet` at basket/cycle level.
+- Explicit `strategy` / `T` / `S` labels were preserved as reference labels, not used as clustering features.
+- PnL/profit identifiers, row IDs, exit-time fields, and absolute price levels were excluded from clustering features to avoid outcome leakage, ID leakage, and historical price-regime clustering.
+- Features were median-imputed, clipped at 1st/99th percentiles, standardized, then clustered with KMeans for k=2..12.
+- Silhouette diagnostics use Manhattan distance because Euclidean pairwise-distance scoring produced sklearn/numpy RuntimeWarnings in this local environment despite finite scaled inputs.
+
+Key results:
+
+- Active explicit strategies in the report remain 8: `T1/S01`, `T2/S03`, `T2/S04`, `T3/S06`, `T4/S08`, `T5/S09`, `T5/S10`, `T6/S12`.
+- KMeans natural silhouette choice: `k=3`.
+- Forced k=12 assignments were generated for diagnostic comparison only.
+- Best-cluster ARI vs explicit `T/S` strategy tags: `0.1690`.
+- Best-cluster NMI vs explicit `T/S` strategy tags: `0.3213`.
+- Natural clusters do not map cleanly one-to-one to explicit strategies; they appear to capture broad behavior regimes such as longer holds / lower RSI-downtrend context / short-duration momentum-volume behavior rather than exact embedded strategy IDs.
+- Cluster 1 is enriched for `T6/S12` and `T3/S06`; this is useful for Phase 4 because `T3/S06` was already the major negative-PnL outlier.
+
+Interpretation:
+
+- Explicit `T/S` labels remain the strongest evidence for active strategy identity.
+- The marketed 12 strategies are still not all observed in this backtest; forced 12 clusters should not be interpreted as proof of 12 active strategies.
+- Phase 4 should use explicit strategies as supervised reference groups, then use cluster regimes as auxiliary behavioral slices for rule inference.

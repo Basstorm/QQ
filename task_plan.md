@@ -158,6 +158,17 @@ Using M15 as primary entry-context timeframe and M1 for management behavior:
 - M1 post-entry path for close/add-on verification.
 - Spread and tick-volume context.
 
+Deferred/fallback extension if current feature set cannot explain `Sxx` behavior well:
+
+- Add moving-average relationship/crossover-style features:
+  - `EMA8 > EMA21`, `EMA21 > EMA50`, stacked bullish/bearish alignment, cross-up/cross-down events, bars since cross.
+- Expand beyond current EMA/RSI/ADX/MACD/ATR feature set and do not limit the search to the examples below:
+  - SMA, EMA, HMA, WMA, Bollinger Bands, CCI, ADX/DMI, RSI, MACD, ATR, volatility bands, and related slope/distance/crossover variants.
+  - Consider the broad universe of public technical indicators exposed by `pandas-ta` / compatible libraries; obscure indicators may be relevant if Quantum Queen uses less common filters.
+- Use broader parameter grids, not only common defaults.
+- For each explicit `Sxx`, search for candidate indicator/parameter combinations that best separate actual initial entries from non-entry/background M15 bars.
+- Treat this as a fallback/Phase 4+ parameter-discovery track if the current compact feature set is insufficient for rule inference.
+
 Expected outputs:
 
 - `outputs/basket_features.parquet`
@@ -167,7 +178,7 @@ Expected outputs:
 
 ## Phase 3 — Strategy Candidate Discovery
 
-**Status:** pending
+**Status:** complete
 
 Objectives:
 
@@ -218,6 +229,7 @@ Candidate explainability tools:
 - Feature importance from simple tree/forest models.
 - Rule tables based on quantiles and distributions.
 - Manual visual checks on representative trades.
+- If compact features are insufficient, run expanded indicator/parameter discovery per `Sxx`, including MA crossover/stacking and broader SMA/EMA/HMA/WMA/BBands/CCI/ADX parameter grids.
 
 Expected outputs:
 
