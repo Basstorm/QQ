@@ -1,0 +1,25 @@
+# Python / local environments
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Raw market/backtest data kept local
+QuantumQueen_backtest_report.xlsx
+xauusd_*.csv
+
+# Generated analysis outputs
+outputs/
+*.parquet
+*.feather
+*.pkl
+*.pickle
+
+# Devin/runtime generated context snapshots
+.planning/context/
+.playwright-mcp/
+
+# OS/editor noise
+.DS_Store
+*.swp
+*.swo
