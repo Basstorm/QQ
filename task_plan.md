@@ -116,7 +116,7 @@ Expected outputs:
 
 ## Phase 2 — Feature Engineering
 
-**Status:** ready to start
+**Status:** complete
 
 Objectives:
 
@@ -163,6 +163,7 @@ Expected outputs:
 - `outputs/basket_features.parquet`
 - `outputs/deal_features.parquet`
 - `outputs/feature_dictionary.md`
+- `outputs/phase2_feature_report.md`
 
 ## Phase 3 — Strategy Candidate Discovery
 
@@ -269,4 +270,3 @@ Expected outputs:
 |------|-------|---------|------------|
 | 2026-06-10 | Base Python missing pandas/openpyxl | Tried reading Excel with system Python | User approved using uv environment; dependency installation requires proxy. |
 | 2026-06-10 | uv install initially attempted without proxy | Direct package resolution/download | Use `HTTP_PROXY`/`HTTPS_PROXY=http://127.0.0.1:7897` for package installs. |
-

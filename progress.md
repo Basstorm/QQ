@@ -155,3 +155,38 @@ Immediate Phase 2 tasks:
    - Basket/order-structure features.
 3. Generate `outputs/deal_features.parquet`, `outputs/basket_features.parquet`, and `outputs/feature_dictionary.md`.
 4. Produce a short Phase 2 report before moving to clustering/rule inference.
+
+### Phase 2 Session Started
+
+- Restored context from `task_plan.md`, `findings.md`, and `progress.md`.
+- Confirmed Phase 2 source parquet schemas:
+  - `trades_normalized.parquet`: 11,310 rows x 31 columns.
+  - `positions.parquet`: 6,100 rows x 27 columns.
+  - `baskets.parquet`: 1,657 rows x 14 columns.
+- mem0 search found no additional project-specific QuantumQueenResearch memories beyond local planning files.
+- Phase 2 implementation design: add reusable feature helpers in `src/qq_research/features.py`, a generation script in `scripts/phase2_feature_engineering.py`, and TDD tests in `tests/test_features.py`.
+
+### Phase 2 Feature Engineering Completed
+
+- Added `pandas-ta-classic` dependency because `pandas-ta` / `pandas_ta` were not available for this project's Python 3.10-compatible dependency resolution; `pandas-ta-classic` imports as `pandas_ta_classic` and provides RSI/ADX/MACD/ATR/EMA functions.
+- Added TDD tests for:
+  - broker/estimated-UTC session feature generation,
+  - M15 containing-bar context and lookback features,
+  - pandas-ta-classic M15 indicator columns,
+  - long/short M1 MAE/MFE path features,
+  - basket structure and add-on spacing features,
+  - Phase 2 feature dictionary/report text.
+- Implemented `src/qq_research/features.py`.
+- Implemented `scripts/phase2_feature_engineering.py`.
+- Generated Phase 2 outputs:
+  - `outputs/deal_features.parquet` (6,100 x 160),
+  - `outputs/basket_features.parquet` (1,657 x 154),
+  - `outputs/feature_dictionary.md`,
+  - `outputs/phase2_feature_report.md`.
+- Verification after generation:
+  - `python -m unittest discover -s tests -v` passes 11 tests.
+  - Required key columns are present in both feature tables.
+  - M1 path availability is 100%.
+  - Feature-table PnL totals match Phase 1 source tables within floating-point tolerance.
+- Code review found and fixed a path-feature helper inconsistency with custom `entry_time_col`.
+- Code simplification removed an unnecessary merge before basket feature construction.

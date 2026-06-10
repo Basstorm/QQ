@@ -769,6 +769,20 @@ wheels = [
 ]
 
 [[package]]
+name = "pandas-ta-classic"
+version = "0.6.20"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "pandas", version = "3.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/16/72/d31ff71184ec1b75c86b82f2d7b10d9c2a2f3a34049d26153d9462ae07ee/pandas_ta_classic-0.6.20-py3-none-any.whl", hash = "sha256:68cced5b9b5281b77f8b85dd0afff85505509531206fb7ff967ace85ef5d0630", size = 395971, upload-time = "2026-05-20T15:59:09.029Z" },
+]
+
+[[package]]
 name = "patsy"
 version = "1.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1018,6 +1032,7 @@ dependencies = [
     { name = "openpyxl" },
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pandas", version = "3.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pandas-ta-classic" },
     { name = "plotly" },
     { name = "polars" },
     { name = "pyarrow" },
@@ -1035,6 +1050,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=2.3.3" },
+    { name = "pandas-ta-classic", specifier = ">=0.6.20" },
     { name = "plotly", specifier = ">=6.8.0" },
     { name = "polars", specifier = ">=1.41.2" },
     { name = "pyarrow", specifier = ">=24.0.0" },

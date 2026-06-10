@@ -298,3 +298,43 @@ Critical invariants established before Phase 2:
 - `T3/S06` is a major outlier with large negative reconstructed PnL and long average holding time; prioritize it in later profiling.
 
 Phase 2 should not assume every entry deal is an initial signal. Many entry deals are likely add-ons. Initial-entry detection must be derived carefully from reconstructed positions/baskets and timing/overlap context.
+
+## Phase 2 Feature Engineering Findings
+
+Generated:
+
+- `src/qq_research/features.py`
+- `scripts/phase2_feature_engineering.py`
+- `tests/test_features.py`
+- `tests/test_phase2_report.py`
+- `outputs/deal_features.parquet`
+- `outputs/basket_features.parquet`
+- `outputs/feature_dictionary.md`
+- `outputs/phase2_feature_report.md`
+
+Feature table semantics:
+
+- `deal_features.parquet` is reconstructed position / entry-deal level, not raw 11,310 deal-event level. It has one row per FIFO-matched entry-to-exit position fragment and preserves `entry_deal`, `exit_deal`, `strategy`, `T`, `S`, broker-time fields, and estimated UTC session fields.
+- `basket_features.parquet` is reconstructed analytical basket/cycle level from Phase 1 basket IDs.
+
+Key generated features:
+
+- Broker and estimated UTC session features. Estimated UTC is still `broker_time - 3h`; candle joins still use broker/report time with `0h` offset.
+- M15 entry context features: containing M15 bar shape, lookback momentum, recent high/low breakout relation, ATR/EMA trend context, price location inside the M15 range.
+- M15 technical indicators use `pandas-ta-classic`, the installable pandas-ta compatible package available in this environment. Generated columns include RSI, ADX/DMI, MACD, ATR, and EMA-derived fields.
+- M1 post-entry path features: path availability, MAE/MFE, net exit move, time-to-MAE/MFE, spread, and tick volume.
+- Basket/order-structure features: `is_initial_entry`, `entry_sequence_in_basket`, add-on count, add-on spacing in minutes/price, volume multiplier, close span, and close-together flag.
+
+Validation results:
+
+- `deal_features.parquet`: 6,100 rows x 160 columns, matching `positions.parquet` row count.
+- `basket_features.parquet`: 1,657 rows x 154 columns, matching `baskets.parquet` row count.
+- M1 path coverage is 100% for deal and basket features.
+- Deal-feature PnL sum matches Phase 1 positions within floating-point tolerance (`~3.7e-09` difference). Basket-feature PnL sum matches Phase 1 baskets exactly.
+- Initial basket entries at broker minute `% 15 == 0`: `0.6270`.
+- All reconstructed position/entry rows at broker minute `% 15 == 0`: `0.3739`.
+
+Important interpretation:
+
+- The initial-entry timing share is the relevant diagnostic for the user's M15-entry hypothesis; all entry rows include add-ons and therefore should not be expected to align to M15 boundaries.
+- `T3/S06` remains a priority outlier: Phase 2 report shows much larger average MAE points than other strategies, consistent with Phase 1's large negative PnL and long holding times.
