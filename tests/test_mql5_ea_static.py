@@ -31,6 +31,9 @@ class Mql5EaStaticTests(unittest.TestCase):
 
         self.assertIn("PreviousSignal", source)
         self.assertIn("SignalRisingEdge", source)
+        self.assertIn("RequireCurrentM15Confirmation", source)
+        self.assertIn("EntrySignal(Strategies[i].Name, 1)", source)
+        self.assertIn("EntrySignal(Strategies[i].Name, 0)", source)
         self.assertIn("TpSpreadCompensationPoints", source)
         self.assertIn("AddOnSpreadCompensationPoints", source)
         self.assertNotIn("MaxBasketHoldHours", source)

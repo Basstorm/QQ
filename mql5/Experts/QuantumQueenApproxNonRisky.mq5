@@ -3,7 +3,7 @@
 //| Approximate non-risky Quantum Queen strategies for MT5 backtest.  |
 //+------------------------------------------------------------------+
 #property strict
-#property version "0.11"
+#property version "0.12"
 
 #include <Trade/Trade.mqh>
 
@@ -12,6 +12,7 @@ input double BalancePer001Lot = 400.0;
 input int    SlippagePoints   = 30;
 input double TpSpreadCompensationPoints    = 0.30;
 input double AddOnSpreadCompensationPoints = 0.30;
+input bool   RequireCurrentM15Confirmation = true;
 input bool   UseS01           = true;
 input bool   UseS03           = true;
 input bool   UseS04           = true;
@@ -66,7 +67,8 @@ void CheckEntries()
    for(int i = 0; i < ArraySize(Strategies); i++)
    {
       if(!Strategies[i].Enabled) continue;
-      bool currentSignal = EntrySignal(Strategies[i].Name);
+      bool closedBarSignal = EntrySignal(Strategies[i].Name, 1);
+      bool currentSignal = closedBarSignal && (!RequireCurrentM15Confirmation || EntrySignal(Strategies[i].Name, 0));
       bool edge = SignalRisingEdge(i, currentSignal);
       if(CountBasketPositions(Strategies[i].MagicOffset) > 0) continue;
       if(edge)
@@ -91,18 +93,18 @@ void ManageOpenBaskets()
    }
 }
 
-bool EntrySignal(const string name)
+bool EntrySignal(const string name, const int shift)
 {
    if(name == "T1/S01")
-      return CCI(20, 1) >= 130.5291 && DIMinus(7, 1) <= 8.1907 && DIPlus(7, 1) >= 33.2559;
+      return CCI(20, shift) >= 130.5291 && DIMinus(7, shift) <= 8.1907 && DIPlus(7, shift) >= 33.2559;
    if(name == "T2/S03")
-      return MASlope(MODE_LWMA, 50, 4, 1) >= 1.3709 && WMA(21, 1) - WMA(50, 1) >= 3.9578 && MASlope(MODE_SMA, 21, 4, 1) >= 1.8114;
+      return MASlope(MODE_LWMA, 50, 4, shift) >= 1.3709 && WMA(21, shift) - WMA(50, shift) >= 3.9578 && MASlope(MODE_SMA, 21, 4, shift) >= 1.8114;
    if(name == "T2/S04")
-      return DIMinus(21, 1) <= 11.2552 && ROC(34, 1) >= 0.8966 && MASlope(MODE_SMA, 21, 4, 1) >= 2.3986;
+      return DIMinus(21, shift) <= 11.2552 && ROC(34, shift) >= 0.8966 && MASlope(MODE_SMA, 21, 4, shift) >= 2.3986;
    if(name == "T4/S08")
-      return ADXMain(21, 1) >= 50.6542 && iClose(_Symbol, PERIOD_M15, 1) - EMA(50, 1) >= 15.5052;
+      return ADXMain(21, shift) >= 50.6542 && iClose(_Symbol, PERIOD_M15, shift) - EMA(50, shift) >= 15.5052;
    if(name == "T5/S09")
-      return CMO(14, 1) >= 70.0936 && CMO(21, 1) >= 59.3097 && CHOP(14, 1) <= 28.5623;
+      return CMO(14, shift) >= 70.0936 && CMO(21, shift) >= 59.3097 && CHOP(14, shift) <= 28.5623;
    return false;
 }
 

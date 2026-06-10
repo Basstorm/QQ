@@ -28,6 +28,7 @@ Excluded strategies:
 - Basket layering is capped by the observed max layer count for each included strategy.
 - Entry is edge-only: a basket opens only when a strategy condition changes from false to true.
 - `TpSpreadCompensationPoints` and `AddOnSpreadCompensationPoints` compensate for the difference between the Python close/close research model and MT5 ask/bid execution.
+- `RequireCurrentM15Confirmation` requires the current forming M15 bar to still satisfy the entry condition before acting on the last closed M15 signal. This filters stale entries where the previous bar was valid but the current bar has already invalidated the setup.
 
 ## Position sizing
 
@@ -47,4 +48,4 @@ Use an MT5 hedging account for basket/layer behavior. On a netting account, posi
 
 This EA is an approximation for research backtesting, not source-code recovery. It does not model all original QQ hidden behavior, broker-side execution nuances, spread/slippage assumptions, or S06/S10/S12 risk logic.
 
-Version `0.11` intentionally does not add an emergency stop or timeout guard, so it remains closer to the Python research backtest. If this version still diverges strongly, the next likely causes to inspect are M15 bar-time alignment and MT5 indicator-definition differences.
+Version `0.12` intentionally does not add an emergency stop or timeout guard, so it remains closer to the Python research backtest. It only adds edge-only entry, spread compensation, and current-bar confirmation to reduce stale closed-bar entries. If this version still diverges strongly, the next likely cause to inspect is MT5 indicator-definition differences versus the Python/pandas-ta feature matrix.
